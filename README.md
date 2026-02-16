@@ -10,7 +10,7 @@ This tool take console output from the `status` command to check several differe
 * Backpack.tf TF2 inventory values
 * Time on server, ping, Steam ID and more
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/master/img/all-players.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/all-players.png)
 
 # Setup
 
@@ -28,7 +28,7 @@ about who is playing on the server!
 
 The first time you run the program, you'll be presented with the Settings menu:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/master/img/settings.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/settings.png)
 
 The first thing you need are API keys for the Steam API, SteamHistory.net API and Backpack.tf API.
 
@@ -55,13 +55,13 @@ until you find a look and feel that you like best.
 
 This is the main window:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/master/img/empty-main.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/empty-main.png)
 
 In the text field of this window, you can input any number of Steam32 IDs -- Steam IDs that look like [U:1:12345678].
 The most common way to use this tool is to open the console while playing TF2, type in the command `status`, then copy the
 text that comes out and paste it into this text box (you can **right-click to paste** into this window to save time):
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/master/img/pasted-main.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/pasted-main.png)
 
 The text you copy and paste doesn't have to be precise, just make sure you copy the output of the status command. Extra text is ignored.
 
@@ -70,17 +70,17 @@ Next, click the Check Users button and wait a second or two, and the results of 
 If any of the checked Steam IDs have a VAC or Steam Game ban associated, the Steam Bans tab will appear with their name and
 some info about their bans shown. You can double-click a row of player data to open their Steam profile page and have a closer look:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/master/img/steam-bans.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/steam-bans.png)
 
 Likewise, if any Steam IDs have community server bans, the Community Bans tab will be present with the player's name and ban summary.
 Again, you can double-click a row of player data to open their page on SteamHistory.net and see more details about all their community bans:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/master/img/community-bans.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/community-bans.png)
 
 Finally, on the All Players tab you'll see a summary of all players on the server, whether they have a ban or not. Double click
 their row to open their Steam Profile to have a closer look:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/master/img/all-players.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/all-players.png)
 
 You can right on any row in any screen to open a player's Steam Profile, SteamHistory.net profile, Backpack.tf inventory,
 and more. You can also copy the player's name, Steam ID and any URLs to sources of information used by this app.
