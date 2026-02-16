@@ -1,0 +1,83 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {par t {seq t {space :::p, comp label1:::p::p, space :0:0:x}, seq l {space :p:12:p, par l {comp steamApiKeyField:::::x, comp steamHistoryApiKeyField::l:::x, seq {par l {comp label7:::p::p, comp label6:::p::p, comp label2:::p::p}, space :0:402:x}}}}, space :::p}, seq {space :::p, par l {comp label3:::p::p, seq l {space :6:6:p, par l {comp label4::l:p::p, comp label5::l:p::p}, space :12:12:p, par l {seq {comp increaseFontButton:::p::p, space :::p, comp decreaseFontButton:::p::p}, comp changeThemeButton:::p::p}}}, space ::308:x}, seq t {space :0:325:x, comp saveButton:::p::p, space :::p, comp closeButton:::p::p, space :p:14:p}, seq t {space :p:12:p, comp backpacktfApiKeyField::::517:x, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space u:::p, comp label2:::p::p, space :::p, comp steamApiKeyField:::p::p, space u:::p, comp label6:::p::p, space :::p, comp steamHistoryApiKeyField:::p::p, space u:::p, comp label7:::p::p, space :::p, comp backpacktfApiKeyField:::p::p, par l {seq {space ::159:x, par b {comp closeButton::b:p::p, comp saveButton::b:p::p}, space :p:15:p}, seq l {space :p:18:p, comp label3:::p::p, space u:::p, par b {comp label4::b:p::p, comp decreaseFontButton::b:p::p, comp increaseFontButton::b:p::p}, space :p:3:p, par b {comp label5::b:p:16:p, comp changeThemeButton::b:p::p}, space ::81:x}}}}"
+		} ) {
+			name: "this"
+			"defaultCloseOperation": 2
+			"visible": true
+			"title": "Settings"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "API Keys"
+				"$client.FlatLaf.styleClass": "large"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "steamHistoryApiKeyField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Appearance"
+				"$client.FlatLaf.styleClass": "large"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Font Size"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "increaseFontButton"
+				"text": "+"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "increaseFontSize", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "decreaseFontButton"
+				"text": "-"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "decreaseFontSize", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Theme"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "changeThemeButton"
+				"text": "Change Theme"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "changeTheme", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "closeButton"
+				"text": "Close"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "close", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "saveButton"
+				"text": "Save"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveSettings", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "steamApiKeyField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Steam API"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "SteamHistory API"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "Backpack.tf API"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "backpacktfApiKeyField"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 430, 400 )
+		} )
+	}
+}

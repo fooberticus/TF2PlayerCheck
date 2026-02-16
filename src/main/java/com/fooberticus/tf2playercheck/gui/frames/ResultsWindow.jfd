@@ -1,0 +1,22 @@
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.5" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp resultsTabbedPane::::761:x, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp resultsTabbedPane::::444:x, space :::p}}"
+		} ) {
+			name: "this"
+			"visible": true
+			"title": "Results"
+			"defaultCloseOperation": 2
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "resultsTabbedPane"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 620, 395 )
+		} )
+	}
+}

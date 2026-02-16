@@ -1,0 +1,48 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :0:261:x, comp checkUsersButton:::p::p, space :::p, comp clearButton:::p::p, space :p:14:p}, seq t {space :::p, comp scrollPane1::::486:x, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::252:x, space u:::p, par b {comp clearButton::b:p::p, comp checkUsersButton::b:p::p}, space :p:14:p}}"
+		} ) {
+			name: "this"
+			"visible": true
+			"defaultCloseOperation": 3
+			"title": "TF2 Player Check"
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "clearButton"
+				"text": "Clear"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "clear", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "checkUsersButton"
+				"text": "Check Users"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkUsers", false ) )
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "statusTextArea"
+					"font": new java.awt.Font( "Lucida Console", 0, 14 )
+				} )
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu1"
+					"text": "File"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem1"
+						"text": "Settings"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openSettings", false ) )
+					} )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 310 )
+		} )
+	}
+}
