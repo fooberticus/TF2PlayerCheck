@@ -32,11 +32,16 @@ new FormModel {
 				name: "menuBar1"
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "menu1"
-					"text": "File"
+					"text": "Settings"
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItem1"
-						"text": "Settings"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openSettings", false ) )
+						"text": "API Keys"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openAPIKeysConfiguration", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem2"
+						"text": "Appearance"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openAppearanceConfiguration", false ) )
 					} )
 				} )
 			}

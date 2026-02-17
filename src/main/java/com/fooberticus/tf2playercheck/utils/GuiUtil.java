@@ -172,6 +172,10 @@ public final class GuiUtil {
         setGlobalFontSizeOffset(-1);
     }
 
+    public static int getGlobalFontSize() {
+        return prefs.getInt(PROPERTY_FONT_SIZE, DEFAULT_FONT_SIZE);
+    }
+
     private static Font getSavedFont() {
         Font font = UIManager.getFont("defaultFont");
         return font.deriveFont((float) prefs.getInt(PROPERTY_FONT_SIZE, DEFAULT_FONT_SIZE));

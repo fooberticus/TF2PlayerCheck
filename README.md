@@ -1,8 +1,8 @@
 # TF2 Player Check
 
-Easy to use tools for checking Team Fortress 2 (TF2) players for VAC and community server bans. Know who you're playing with!
+Easy-to-use tools for checking Team Fortress 2 (TF2) players for VAC and community server bans. Know who you're playing with!
 
-This tool take console output from the `status` command to check several different sources for player bans and other information, including:
+This tool takes console output from the `status` command to check several different sources for player bans and other information, including:
 
 * Steam VAC and Game bans from Valve
 * Steam Community Server bans and other info from SteamHistory.net
@@ -14,15 +14,15 @@ This tool take console output from the `status` command to check several differe
 
 # Setup
 
-On Windows you can download a Zip or MSI installer for Windows from the releases section. Either install using the MSI, or unzip 
-where you wish to install. Run the .exe and the program will start.
+On Windows you can download a Zip or MSI installer from the releases section. Either install using the MSI, or unzip 
+where you wish to install. Run the .exe and the program will start. These Windows distributions come with a Java Runtime Environment (JRE) included.
 
 On Linux you can download the .jar from the releases section and run it with `java -jar <name of .jar file>`. Requires Java 25.
 
-If you're a Java developer, you can clone this git project and run `mvn exec:java` in the project root. Requires Maven 3.
+If you're a Java developer, you can clone this git project and run `mvn exec:java` in the project root. Requires Java 25 and Maven 3.
 
 In your TF2 game, be sure that the developer console is enabled. This is where you'll run the `status` command to get information
-about who is playing on the server!
+about who is playing on the server. When the status output is displayed, copy and paste it into the text field in the program.
 
 # Configuring API Keys
 
@@ -30,7 +30,7 @@ The first time you run the program, you'll be presented with the Settings menu:
 
 ![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/settings.png)
 
-The first thing you need are API keys for the Steam API, SteamHistory.net API and Backpack.tf API.
+The first thing you'll need are API keys for the Steam API, SteamHistory.net API and Backpack.tf API.
 
 You can get a Steam API key here:
 
