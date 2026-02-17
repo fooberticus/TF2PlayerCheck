@@ -1,4 +1,5 @@
 # TF2 Player Check
+(formerly [SteamTools](https://github.com/fooberticus/SteamTools))
 
 Easy-to-use tools for checking Team Fortress 2 (TF2) players for VAC and community server bans. Know who you're playing with!
 
