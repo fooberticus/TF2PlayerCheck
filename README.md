@@ -10,9 +10,9 @@ This tool takes console output from the `status` command to check several differ
 * Backpack.tf TF2 inventory values
 * Time on server, ping, Steam ID and more
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/all-players.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/10-right-mouse-1.png)
 
-# Setup
+# Setup and Running
 
 On Windows you can download a Zip or MSI installer from the releases section. Either install using the MSI, or unzip 
 where you wish to install. Run the .exe and the program will start. These Windows distributions come with a Java Runtime Environment (JRE) included.
@@ -26,9 +26,9 @@ about who is playing on the server. When the status output is displayed, copy an
 
 # Configuring API Keys
 
-The first time you run the program, you'll be presented with the Settings menu:
+The first time you run the program, you'll be presented with the API Key Configuration menu:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/settings.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/1-key-config.png)
 
 The first thing you'll need are API keys for the Steam API, SteamHistory.net API and Backpack.tf API.
 
@@ -48,45 +48,54 @@ https://next.backpack.tf/account/api-access
 Once you've copied and pasted the API keys into the appropriate fields, you can save and then close the settings menu.
 You're ready to use TF2 Player Check!
 
-You can also increase/decrease the global font size and change the UI theme from this menu. Play around with the settings
-until you find a look and feel that you like best.
+You can also adjust the appearance of the application using the Appearance Configuration window:
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/2-appearance-config.png)
+
+You can access both of these configuration windows at any time from the Settings menu in the main window:
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/3-settings-menu.png)
 
 # Usage
 
+First, in Team Fortress 2, open the console and run the `status` command. Highlight the output text and copy it:
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/4-console.png)
+
+You don't have to be precise, just make sure you copy whatever the `status` command prints out.
+
 This is the main window:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/empty-main.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/5-main-window.png)
 
-In the text field of this window, you can input any number of Steam32 IDs -- Steam IDs that look like [U:1:12345678].
-The most common way to use this tool is to open the console while playing TF2, type in the command `status`, then copy the
-text that comes out and paste it into this text box (you can **right-click to paste** into this window to save time):
+The text field in this window is where you paste the output of the `status` command. Either hit `Ctrl+V` or right-click to paste.
+Right-clicking clears the text field and pastes automatically, to make using the tool a little easier:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/pasted-main.png)
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/6-after-paste.png)
 
-The text you copy and paste doesn't have to be precise, just make sure you copy the output of the status command. Extra text is ignored.
+Next, click the Check Users button and wait for the Results window to open.
 
-Next, click the Check Users button and wait a second or two, and the results of the Steam and community ban check will come back.
+If any players have a VAC or Steam Game ban associated, the Steam Bans tab will appear with their name and
+some info about the bans. You can double-click a row of player data to open their Steam profile:
 
-If any of the checked Steam IDs have a VAC or Steam Game ban associated, the Steam Bans tab will appear with their name and
-some info about their bans shown. You can double-click a row of player data to open their Steam profile page and have a closer look:
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/8-steam-bans.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/steam-bans.png)
+Likewise, if any players have community server bans, the Community Bans tab will be present with the player's name and ban summary.
+You can double-click a row of player data to open their page on SteamHistory.net:
 
-Likewise, if any Steam IDs have community server bans, the Community Bans tab will be present with the player's name and ban summary.
-Again, you can double-click a row of player data to open their page on SteamHistory.net and see more details about all their community bans:
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/7-community-bans.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/community-bans.png)
+Finally, on the All Players tab you'll see a summary of all players on the server, whether they have a ban or not. 
+This screen also shows general information about each player, like ping and time on server, as well as their Backpack.tf inventory value.
 
-Finally, on the All Players tab you'll see a summary of all players on the server, whether they have a ban or not. Double click
-their row to open their Steam Profile to have a closer look:
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/9-all-players.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/all-players.png)
-
-You can right on any row in any screen to open a player's Steam Profile, SteamHistory.net profile, Backpack.tf inventory,
+Right-click on any row in any screen to open a context menu where you can open a player's Steam Profile, SteamHistory.net profile, Backpack.tf inventory,
 and more. You can also copy the player's name, Steam ID and any URLs to sources of information used by this app.
 
-And that's it for now. More features are being added, but as of now this is a handy way to quickly find out if you are playing
-with anyone who has a known record of cheating in TF2!
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/10-right-mouse-1.png)
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/11-right-mouse-2.png)
 
 # Build and package the project
 
