@@ -27,7 +27,7 @@ import java.util.prefs.Preferences;
 public final class GuiUtil {
 
     public static final String APPLICATION_NAME = "TF2 Player Check";
-    public static final String DEFAULT_THEME = "Material Dark";
+    public static final String DEFAULT_THEME = "Arc Dark Orange";
     private static final String NAMESPACE = "fooberticus.TF2PlayerCheck";
     private static final int DEFAULT_FONT_SIZE = 15;
 
