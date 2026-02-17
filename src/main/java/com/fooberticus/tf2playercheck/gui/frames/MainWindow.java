@@ -66,12 +66,16 @@ public class MainWindow extends JFrame {
         if (GuiUtil.getSavedSteamHistoryApiKey() == null || GuiUtil.getSavedSteamHistoryApiKey().isEmpty()
             || GuiUtil.getSavedSteamApiKey() == null || GuiUtil.getSavedSteamApiKey().isEmpty()
             || GuiUtil.getSavedBackpackTfApiKey() == null || GuiUtil.getSavedBackpackTfApiKey().isEmpty()) {
-            ConfigurationWindow.startConfigurationWindow();
+            APIKeysWindow.startAPIKeysWindow();
         }
     }
 
-    private void openSettings() {
-        ConfigurationWindow.startConfigurationWindow();
+    private void openAPIKeysConfiguration() {
+        APIKeysWindow.startAPIKeysWindow();
+    }
+
+    private void openAppearanceConfiguration() {
+        AppearanceWindow.startAppearanceWindow();
     }
 
     private void clear() {
@@ -248,6 +252,7 @@ public class MainWindow extends JFrame {
         menuBar1 = new JMenuBar();
         menu1 = new JMenu();
         menuItem1 = new JMenuItem();
+        menuItem2 = new JMenuItem();
         clearButton = new JButton();
         checkUsersButton = new JButton();
         scrollPane1 = new JScrollPane();
@@ -264,12 +269,17 @@ public class MainWindow extends JFrame {
 
             //======== menu1 ========
             {
-                menu1.setText("File"); //NON-NLS
+                menu1.setText("Settings"); //NON-NLS
 
                 //---- menuItem1 ----
-                menuItem1.setText("Settings"); //NON-NLS
-                menuItem1.addActionListener(e -> openSettings());
+                menuItem1.setText("API Keys"); //NON-NLS
+                menuItem1.addActionListener(e -> openAPIKeysConfiguration());
                 menu1.add(menuItem1);
+
+                //---- menuItem2 ----
+                menuItem2.setText("Appearance"); //NON-NLS
+                menuItem2.addActionListener(e -> openAppearanceConfiguration());
+                menu1.add(menuItem2);
             }
             menuBar1.add(menu1);
         }
@@ -327,6 +337,7 @@ public class MainWindow extends JFrame {
     private JMenuBar menuBar1;
     private JMenu menu1;
     private JMenuItem menuItem1;
+    private JMenuItem menuItem2;
     private JButton clearButton;
     private JButton checkUsersButton;
     private JScrollPane scrollPane1;

@@ -1,0 +1,50 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp steamApiKeyField::l::486:x, comp steamHistoryApiKeyField::l::486:x, seq {par l {comp label1:::p::p, comp label2::l:p::p, comp label3::l:p::p}, space :0:371:x}, comp backpacktfApiKeyField::l::486:x, seq t {space :0:278:x, comp saveButton:::p::p, space s:::p, comp cancelButton:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :::p, comp steamApiKeyField:::p::p, space s:::p, comp label2:::p::p, space :::p, comp steamHistoryApiKeyField:::p::p, space s:::p, comp label3:::p::p, space :::p, comp backpacktfApiKeyField:::p::p, space ::68:x, par b {comp cancelButton::b:p::p, comp saveButton::b:p::p}, space :::p}}"
+		} ) {
+			name: "this"
+			"title": "API Key Configuration"
+			"defaultCloseOperation": 2
+			"visible": true
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Steam API"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "steamApiKeyField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "SteamHistory API"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "steamHistoryApiKeyField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Backpack.tf API"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "backpacktfApiKeyField"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "cancelButton"
+				"text": "Close"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "close", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "saveButton"
+				"text": "Save"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveSettings", false ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}
