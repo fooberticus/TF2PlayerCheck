@@ -29,10 +29,10 @@ TF2PlayerCheck uses Flatlaf, with over a dozen popular themes for you to choose 
 
 ## Installation and Enabling TF2 Developer Console
 
-On Windows you can download a Zip or MSI installer from the releases section. Either install using the MSI, or unzip 
+On Windows you can download a Zip or MSI installer from the [releases page](https://github.com/fooberticus/TF2PlayerCheck/releases). Either install using the MSI, or unzip 
 where you wish to install. Run the .exe and the program will start. These Windows distributions come with a Java Runtime Environment (JRE) included.
 
-On Linux you can download the .jar from the releases section and run it with `java -jar <name of .jar file>`. Requires Java 25.
+On Linux you can download the .jar from the releases page and run it with `java -jar <name of .jar file>`. Requires Java 25.
 
 If you're a Java developer, you can clone this git project and run `mvn exec:java` in the project root. Requires Java 25 and Maven 3.
 
