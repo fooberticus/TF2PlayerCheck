@@ -3,7 +3,7 @@
 --name TF2PlayerCheck
 --vendor Fooberticus
 --app-image TF2PlayerCheck
---app-version 1.0.1
+--app-version 1.1.0
 --win-dir-chooser
 --win-menu
 --verbose

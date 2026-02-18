@@ -43,6 +43,8 @@ public final class GuiUtil {
     private static final String PROPERTY_WINDOW_X = "windowX";
     private static final String PROPERTY_WINDOW_Y = "windowY";
 
+    private static final String PROPERTY_LAST_FILE_PATH = "lastFilePath";
+
     private static final String PROPERTY_STEAM_HISTORY_KEY = "steamHistoryKey";
     private static final String PROPERTY_STEAM_API_KEY = "steamApiKey";
     private static final String PROPERTY_BACKPACKTF_API_KEY = "backpackTfApiKey";
@@ -291,6 +293,16 @@ public final class GuiUtil {
 
     public static void saveBackpackTfApiKey(String key) {
         prefs.put(PROPERTY_BACKPACKTF_API_KEY, key);
+    }
+
+    /* File Utilities */
+
+    public static String getLastFilePath() {
+        return prefs.get(PROPERTY_LAST_FILE_PATH, null);
+    }
+
+    public static void setLastFilePath(String path) {
+        prefs.put(PROPERTY_LAST_FILE_PATH, path);
     }
 
 }

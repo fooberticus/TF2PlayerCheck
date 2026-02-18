@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 public final class SteamUtils {
 
     public static final long STEAM_64_BASE = 76561197960265728L;
+    private static final Pattern STEAM_ID_64_PATTERN = Pattern.compile("(7[0-9]{16})");
     private static final Pattern STEAM_ID_32_PATTERN = Pattern.compile("\\[U:1:([0-9]+)]");
     private static final Pattern ID_PLUS_TIMESTAMP_PATTERN = Pattern.compile("\\[U:1:([0-9]+)] +([0-9:]+) +([0-9]+)");
 
@@ -30,11 +31,19 @@ public final class SteamUtils {
 
     public static List<Long> getUserIdsFromText(final String text) {
         Set<Long> result = new HashSet<>();
-        Matcher m = STEAM_ID_32_PATTERN.matcher(text);
-        while ( m.find() ) {
-            int steam32 = Integer.parseInt(m.group(1));
+
+        Matcher matcher32 = STEAM_ID_32_PATTERN.matcher(text);
+        while ( matcher32.find() ) {
+            int steam32 = Integer.parseInt(matcher32.group(1));
             result.add(steam32 + STEAM_64_BASE);
         }
+
+        Matcher matcher64 = STEAM_ID_64_PATTERN.matcher(text);
+        while ( matcher64.find() ) {
+            long steam64 = Long.parseLong(matcher64.group(1));
+            result.add(steam64);
+        }
+
         return result.stream().toList();
     }
 
