@@ -1,5 +1,9 @@
 # TF2 Player Check
+
 (formerly [SteamTools](https://github.com/fooberticus/SteamTools))
+
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://github.com/fooberticus/TF2PlayerCheck/blob/main/LICENSE.txt)
+[![Download](https://img.shields.io/badge/Download-release-%2393c54b?style=flat-square)]([https://mcreator.net/download](https://github.com/fooberticus/TF2PlayerCheck/releases))
 
 Easy-to-use tools for checking Team Fortress 2 (TF2) players for VAC and community server bans. Know who you're playing with!
 
