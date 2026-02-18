@@ -13,7 +13,21 @@ This tool takes console output from the `status` command to check several differ
 
 ![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/10-right-mouse-1.png)
 
-# Setup and Running
+## Modern look and feel
+
+TF2PlayerCheck uses Flatlaf, with over a dozen popular themes for you to choose to customize your UI.
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-1.png)
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-2.png)
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-3.png)
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-4.png)
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-5.png)
+
+## Installation and Enabling TF2 Developer Console
 
 On Windows you can download a Zip or MSI installer from the releases section. Either install using the MSI, or unzip 
 where you wish to install. Run the .exe and the program will start. These Windows distributions come with a Java Runtime Environment (JRE) included.
@@ -22,16 +36,18 @@ On Linux you can download the .jar from the releases section and run it with `ja
 
 If you're a Java developer, you can clone this git project and run `mvn exec:java` in the project root. Requires Java 25 and Maven 3.
 
-In your TF2 game, be sure that the developer console is enabled. This is where you'll run the `status` command to get information
+In your TF2 game, be sure the developer console is enabled. This is where you'll run the `status` command to get information
 about who is playing on the server. When the status output is displayed, copy and paste it into the text field in the program.
 
-# Configuring API Keys
+For more information about enabling the developer console, see the [TF2 Wiki](https://wiki.teamfortress.com/wiki/Console).
+
+## Setup: Configuring API Keys
 
 The first time you run the program, you'll be presented with the API Key Configuration menu:
 
 ![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/1-key-config.png)
 
-The first thing you'll need are API keys for the Steam API, SteamHistory.net API and Backpack.tf API.
+To use TF2PlayerCheck, you'll need API keys for the Steam API, SteamHistory.net API and Backpack.tf API.
 
 You can get a Steam API key here:
 
@@ -57,7 +73,7 @@ You can access both of these configuration windows at any time from the Settings
 
 ![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/3-settings-menu.png)
 
-# Usage
+## Usage
 
 First, in Team Fortress 2, open the console and run the `status` command. Highlight the output text and copy it:
 
@@ -98,7 +114,25 @@ and more. You can also copy the player's name, Steam ID and any URLs to sources 
 
 ![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/11-right-mouse-2.png)
 
-# Build and package the project
+## Advanced Usage: Importing from Files, JSON and More
+
+In addition to copying and pasting the output of `status`, you can also use any text containing Steam IDs. TF2PlayerCheck can parse Steam IDs from just about anything.
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/12-json-text.png)
+
+You can also import a file directly into the text input area using the File → Import menu option. 
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/13-file-menu.png)
+
+This is handy if you want to process a large console.log file, or you have a json file full of Steam IDs for instance.
+
+![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/14-file-chooser.png)
+
+The various APIs TF2PlayerCheck uses have request size limits of 100 Steam IDs per request, but have no fear. 
+Lists of Steam IDs larger than that will be processed in multiple smaller batches. So if you have a console.log file that you've been accumulating 
+for a while that has thousands of IDs in it, go ahead and import it. Just be prepared to wait a bit while all the API calls are made.
+
+## Build and Package the Project
 
 If you're a Java developer, you can build the project with Maven:
 

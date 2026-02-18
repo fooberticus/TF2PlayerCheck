@@ -17,9 +17,16 @@ import com.fooberticus.tf2playercheck.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,6 +193,18 @@ public class MainWindow extends JFrame {
 
     private void showLoadingDialog(SwingWorker<Void, Void> mySwingWorker, String labelText) {
         final JDialog dialog = new JDialog(this, null, Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.add(new LoadingPanel(labelText));
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (!mySwingWorker.isDone()) {
+                    mySwingWorker.cancel(true);
+                }
+            }
+        });
 
         mySwingWorker.addPropertyChangeListener(evt -> {
             if (evt.getPropertyName().equals("state")) {
@@ -194,11 +213,8 @@ public class MainWindow extends JFrame {
                 }
             }
         });
-        mySwingWorker.execute();
 
-        dialog.add(new LoadingPanel(labelText));
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
+        mySwingWorker.execute();
         dialog.setVisible(true);
     }
 
@@ -217,13 +233,26 @@ public class MainWindow extends JFrame {
             return;
         }
 
+        if (serverPlayers.size() > 100) {
+            JOptionPane.showMessageDialog(this,
+                    serverPlayers.size() +
+                            " Steam IDs found. Requests will be processed " +
+                            "in batches of 100 until complete.");
+        }
+
         disableButtons();
 
-        loadSteamSummaries(serverPlayers);
-        loadSteamBans(serverPlayers);
-        loadRentAMedicCheaters(serverPlayers);
-        loadSteamHistory(serverPlayers);
-        loadBackpackPlayers(serverPlayers);
+        int chunkSize = 100;
+        int size = serverPlayers.size();
+        for (int i = 0; i < size; i += chunkSize) {
+            List<ServerPlayer> subList = serverPlayers.subList(i, Math.min(i + chunkSize, size));
+
+            loadSteamSummaries(subList);
+            loadSteamBans(subList);
+            loadRentAMedicCheaters(subList);
+            loadSteamHistory(subList);
+            loadBackpackPlayers(subList);
+        }
 
         ResultsWindow.startResultsWindow(new HashMap<>(sourceBanMap), new HashMap<>(steamPlayerBanMap), new HashMap<>(rentAMedicResultMap), new HashMap<>(steamPlayerSummaryMap), new HashMap<>(backpackPlayerMap), serverPlayers);
 
@@ -235,6 +264,50 @@ public class MainWindow extends JFrame {
 
         enableButtons();
     }
+
+    private void importFromFile() {
+        JFileChooser fileChooser = new JFileChooser( GuiUtil.getLastFilePath() );
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt", "text", "log");
+        fileChooser.setFileFilter(filter);
+
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    GuiUtil.setLastFilePath( selectedFile.getParent() );
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    try (BufferedReader reader = new BufferedReader( new FileReader( selectedFile ) )) {
+                        String line;
+                        while ( (line = reader.readLine()) != null ) {
+                            stringBuilder.append(line).append("\n");
+                            if ( isCancelled() ) {
+                                log.info("import cancelled");
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        log.error("Error reading file: {}", e.getMessage());
+                        GuiUtil.showSystemTrayError("Error reading file: " + e.getMessage());
+                    }
+
+                    if ( !stringBuilder.isEmpty() ) {
+                        statusTextArea.setText( stringBuilder.toString() );
+                    }
+
+                    return null;
+                }
+            };
+
+            showLoadingDialog(mySwingWorker, "importing file...");
+        }
+
+    }
+
 
     private void enableButtons() {
         checkUsersButton.setEnabled(true);
@@ -250,6 +323,8 @@ public class MainWindow extends JFrame {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
         menuBar1 = new JMenuBar();
+        menu2 = new JMenu();
+        menuItem3 = new JMenuItem();
         menu1 = new JMenu();
         menuItem1 = new JMenuItem();
         menuItem2 = new JMenuItem();
@@ -266,6 +341,17 @@ public class MainWindow extends JFrame {
 
         //======== menuBar1 ========
         {
+
+            //======== menu2 ========
+            {
+                menu2.setText("File"); //NON-NLS
+
+                //---- menuItem3 ----
+                menuItem3.setText("Import..."); //NON-NLS
+                menuItem3.addActionListener(e -> importFromFile());
+                menu2.add(menuItem3);
+            }
+            menuBar1.add(menu2);
 
             //======== menu1 ========
             {
@@ -335,6 +421,8 @@ public class MainWindow extends JFrame {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner non-commercial license
     private JMenuBar menuBar1;
+    private JMenu menu2;
+    private JMenuItem menuItem3;
     private JMenu menu1;
     private JMenuItem menuItem1;
     private JMenuItem menuItem2;

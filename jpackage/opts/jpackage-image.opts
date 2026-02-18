@@ -3,7 +3,7 @@
 --name TF2PlayerCheck
 --vendor Fooberticus
 --input jars
---main-jar TF2PlayerCheck-1.0.1-jar-with-dependencies.jar
+--main-jar TF2PlayerCheck-1.1.0-jar-with-dependencies.jar
 --main-class com.fooberticus.tf2playercheck.Main
 --resource-dir resources
 --icon resources\TF2PlayerCheck.ico
