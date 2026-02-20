@@ -2,12 +2,11 @@
 hostname: Valve Matchmaking Server (Frankfurt srcds301-fra2 #231)
 map     : plr_hightower at: 0 x, 0 y, 0 z
 tags    : hidden,increased_maxplayers,payload,valve
-account : not logged in  (No account specified)
-players : 20 humans, 0 bots (32 max)
-edicts  : 944 used of 2048 max
 #    785 7_7               [U:1:1723584623]    39:18       87    0 active
 # userid name                uniqueid            connected ping loss state
+#  10160 "Smokin' Jay Cutler" [U:1:128658714]     11:29        0    0 active
 #    806 Meh               [U:1:101574366]     14:36       69    0 active
+#  15020 "Grandma's Homecooked Ravioli" [U:1:315913965]     1:10:55      0    0 active
 #    809 malmes3           [U:1:1242792523]    12:50       59    0 active
 #    778 Sex is not real   [U:1:1201331187]    42:21       76    0 active
 #    810 nuke              [U:1:1465980021]    12:42      112    0 active
@@ -26,4 +25,7 @@ edicts  : 944 used of 2048 max
 #    797 nekke45           [U:1:850933706]     30:38      100    0 active
 #    813 BurgerSamurai     [U:1:1754383431]    06:31      105    0 active
 #    789 gondon freeman    [U:1:1524905003]    39:03       80    0 active
-lolglorns :  GET A HEAD START RIGHT MEOW
+#   1000 bitcoinbillionairebenjamin [U:1:1734698740] 00:01 69 0 active
+#   1001 House Gecko [U:1:1278551531] 00:02 67 0 active
+#   1002 strider [U:1:1692679649] 00:02 22 0 active
+#   1003 :3 [U:1:1699405048] 00:10 33 0 active

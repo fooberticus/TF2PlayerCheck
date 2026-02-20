@@ -5,6 +5,7 @@ import com.fooberticus.tf2playercheck.models.steam.SteamPlayerBan;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerSummary;
 import com.fooberticus.tf2playercheck.models.steamhistory.SourceBan;
 import com.fooberticus.tf2playercheck.utils.GuiUtil;
+import com.fooberticus.tf2playercheck.utils.IntegerStringComparator;
 import com.fooberticus.tf2playercheck.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,10 +16,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static com.fooberticus.tf2playercheck.utils.BanStates.PERMANENT;
 import static com.fooberticus.tf2playercheck.utils.BanStates.TEMP_BAN;
@@ -85,13 +84,15 @@ public class CommunityBanPanel extends BaseResultsPanel {
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
+            int activeBans = communityUserMap.get(id).activeBans;
+            int cheatingBans = communityUserMap.get(id).cheatingBans;
             String[] values = { steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
-                    String.valueOf( communityUserMap.get(id).activeBans ),
+                    activeBans == 0 ? "--" : String.valueOf( activeBans ),
                     String.valueOf( communityUserMap.get(id).totalBans ),
-                    communityUserMap.get(id).cheatingBans > 0 ? communityUserMap.get(id).cheatingBans.toString() : "--",
+                    cheatingBans == 0 ? "--" : String.valueOf( cheatingBans ),
                     SteamUtils.getLocalDateFromTimestamp( latestBanMap.get(id).getBanTimestamp() ).toString(),
-                    latestBanMap.get(id).getBanReason()};
+                    latestBanMap.get(id).getBanReason() };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }
 
@@ -102,6 +103,11 @@ public class CommunityBanPanel extends BaseResultsPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+
+        sorter.setComparator(2, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(3, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(4, IntegerStringComparator.INSTANCE);
+
         table.setRowSorter(sorter);
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();

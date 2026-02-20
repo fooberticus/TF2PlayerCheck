@@ -5,6 +5,7 @@ import com.fooberticus.tf2playercheck.models.steam.SteamPlayerBan;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerSummary;
 import com.fooberticus.tf2playercheck.models.steamhistory.SourceBan;
 import com.fooberticus.tf2playercheck.utils.GuiUtil;
+import com.fooberticus.tf2playercheck.utils.IntegerStringComparator;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,11 +49,13 @@ public class VACBanPanel extends BaseResultsPanel {
                 log.info("steam64 id {} is in steamPlayerBanMap, but not in steamPlayerSummaryMap", id);
                 continue;
             }
+            int vacBans = steamPlayerBanMap.get(id).getNumberOfVACBans();
+            int gameBans = steamPlayerBanMap.get(id).getNumberOfGameBans();
             String[] values = { steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
                     steamPlayerBanMap.get(id).getVACBanned() ? "Yes" : "--",
-                    steamPlayerBanMap.get(id).getNumberOfVACBans().toString(),
-                    steamPlayerBanMap.get(id).getNumberOfGameBans().toString(),
+                    vacBans == 0 ? "--" : String.valueOf(vacBans),
+                    gameBans == 0 ? "--" : String.valueOf(gameBans),
                     steamPlayerBanMap.get(id).getDaysSinceLastBan().toString() };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }
@@ -63,6 +67,11 @@ public class VACBanPanel extends BaseResultsPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+
+        sorter.setComparator(3, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(4, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(5, IntegerStringComparator.INSTANCE);
+
         table.setRowSorter(sorter);
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();

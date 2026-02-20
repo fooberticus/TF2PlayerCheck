@@ -6,7 +6,9 @@ import com.fooberticus.tf2playercheck.models.server.ServerPlayer;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerBan;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerSummary;
 import com.fooberticus.tf2playercheck.models.steamhistory.SourceBan;
+import com.fooberticus.tf2playercheck.utils.CurrencyStringComparator;
 import com.fooberticus.tf2playercheck.utils.GuiUtil;
+import com.fooberticus.tf2playercheck.utils.IntegerStringComparator;
 import com.fooberticus.tf2playercheck.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,14 +76,8 @@ public class AllUsersPanel extends BaseResultsPanel {
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
 
-        // this fixes currency column sorting
-        sorter.setComparator(6, (Comparator<String>) (s1, s2) -> {
-            if (s1.equals("--")) return -1;
-            if (s2.equals("--")) return 1;
-            Double d1 = Double.parseDouble(s1.replaceAll("[$,]", ""));
-            Double d2 = Double.parseDouble(s2.replaceAll("[$,]", ""));
-            return d1.compareTo(d2);
-        });
+        sorter.setComparator(3, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(6, CurrencyStringComparator.INSTANCE);
 
         table.setRowSorter(sorter);
 

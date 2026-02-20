@@ -193,6 +193,7 @@ public class MainWindow extends JFrame {
 
     private void showLoadingDialog(SwingWorker<Void, Void> mySwingWorker, String labelText) {
         final JDialog dialog = new JDialog(this, null, Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setUndecorated(true);
         dialog.add(new LoadingPanel(labelText));
         dialog.pack();
         dialog.setLocationRelativeTo(this);
@@ -234,10 +235,13 @@ public class MainWindow extends JFrame {
         }
 
         if (serverPlayers.size() > 100) {
-            JOptionPane.showMessageDialog(this,
-                    serverPlayers.size() +
-                            " Steam IDs found. Requests will be processed " +
-                            "in batches of 100 until complete.");
+            int result = JOptionPane.showConfirmDialog(this,
+                    serverPlayers.size() + " Steam IDs found. Requests will be processed in batches of 100 until complete.",
+                    "Confirm", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result != JOptionPane.OK_OPTION) {
+                return;
+            }
         }
 
         disableButtons();

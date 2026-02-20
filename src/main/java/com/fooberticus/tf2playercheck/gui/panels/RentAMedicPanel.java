@@ -6,6 +6,7 @@ import com.fooberticus.tf2playercheck.models.steam.SteamPlayerBan;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerSummary;
 import com.fooberticus.tf2playercheck.models.steamhistory.SourceBan;
 import com.fooberticus.tf2playercheck.utils.GuiUtil;
+import com.fooberticus.tf2playercheck.utils.IntegerStringComparator;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -42,14 +43,16 @@ public class RentAMedicPanel extends BaseResultsPanel {
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
+            int activeBanCount = getActiveBanCount(id);
+            int totalBans = rentAMedicResultMap.get(id).getCommunityBans().size();
             String[] values = {
                     steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
                     rentAMedicResultMap.get(id).isCheater() ? "Yes" : "--",
                     rentAMedicResultMap.get(id).getCheaterType(),
                     getDateFromTimestamp( rentAMedicResultMap.get(id).getCheaterDate() ),
-                    String.valueOf( getActiveBanCount(id) ),
-                    String.valueOf( rentAMedicResultMap.get(id).getCommunityBans().size() ) };
+                    activeBanCount == 0 ? "--" : String.valueOf( activeBanCount ),
+                    totalBans == 0 ? "--" : String.valueOf( totalBans ) };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }
 
@@ -60,6 +63,10 @@ public class RentAMedicPanel extends BaseResultsPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+
+        sorter.setComparator(5, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(6, IntegerStringComparator.INSTANCE);
+
         table.setRowSorter(sorter);
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
