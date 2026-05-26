@@ -60,13 +60,14 @@ public class AllUsersPanel extends BaseResultsPanel {
             Long id = ids.get(i);
             Long timeCreated = playerSummaryMap.get(id).getTimecreated();
             LocalDate createdDate = SteamUtils.getLocalDateFromTimestamp(timeCreated);
+            BackpackUsersResponse.BackpackPlayer bp = backpackPlayerMap.get(id);
             String[] values = { playerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
                     serverPlayerMap.get(id).getTimeOnServer(),
                     serverPlayerMap.get(id).getPing(),
                     playerSummaryMap.get(id).getCommunityvisibilitystate() == 3 ? "public" : "PRIVATE",
                     createdDate == null ? "--" : createdDate.toString(),
-                    backpackPlayerMap.get(id).getDollarValue()
+                    bp != null ? bp.getDollarValue() : "--"
             };
             System.arraycopy( values, 0, tableContents[i], 0, HEADER_ROW.length );
         }

@@ -43,16 +43,13 @@ public class VACBanPanel extends BaseResultsPanel {
     }
 
     private void formatResults() {
-        String[][] tableContents = new String[steamPlayerBanMap.size()][HEADER_ROW.length];
-
-        List<Long> ids = steamPlayerBanMap.keySet().stream().toList();
+        List<Long> ids = steamPlayerBanMap.keySet().stream()
+                .filter(steamPlayerSummaryMap::containsKey)
+                .toList();
+        String[][] tableContents = new String[ids.size()][HEADER_ROW.length];
 
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
-            if (!steamPlayerSummaryMap.containsKey(id)) {
-                log.info("steam64 id {} is in steamPlayerBanMap, but not in steamPlayerSummaryMap", id);
-                continue;
-            }
             int vacBans = steamPlayerBanMap.get(id).getNumberOfVACBans();
             int gameBans = steamPlayerBanMap.get(id).getNumberOfGameBans();
             String[] values = { steamPlayerSummaryMap.get(id).getPersonaname(),

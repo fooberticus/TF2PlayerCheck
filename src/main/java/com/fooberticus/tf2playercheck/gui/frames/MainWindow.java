@@ -252,7 +252,7 @@ public class MainWindow extends JFrame {
                 new HashMap<>(steamPlayerSummaryMap),
                 new HashMap<>(rentAMedicResultMap),
                 new HashMap<>(backpackPlayerMap),
-                serverPlayers));
+                List.copyOf(serverPlayers)));
 
         enableButtons();
     }
