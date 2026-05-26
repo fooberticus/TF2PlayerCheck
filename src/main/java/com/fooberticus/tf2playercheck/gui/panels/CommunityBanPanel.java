@@ -16,6 +16,7 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
@@ -64,13 +65,14 @@ public class CommunityBanPanel extends BaseResultsPanel {
             int activeBans = user.activeBans;
             int cheatingBans = user.cheatingBans;
             SourceBan latest = user.latestBan;
+            LocalDate latestBanDate = latest != null ? SteamUtils.getLocalDateFromTimestamp(latest.getBanTimestamp()) : null;
             String[] values = {
                     steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),
                     activeBans == 0 ? "--" : String.valueOf(activeBans),
                     String.valueOf(user.totalBans),
                     cheatingBans == 0 ? "--" : String.valueOf(cheatingBans),
-                    latest != null ? SteamUtils.getLocalDateFromTimestamp(latest.getBanTimestamp()).toString() : "--",
+                    latestBanDate != null ? latestBanDate.toString() : "--",
                     latest != null ? latest.getBanReason() : "--"
             };
             System.arraycopy(values, 0, tableContents[i], 0, HEADER_ROW.length);

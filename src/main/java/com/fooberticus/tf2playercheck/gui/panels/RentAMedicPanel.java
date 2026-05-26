@@ -46,7 +46,7 @@ public class RentAMedicPanel extends BaseResultsPanel {
             Long id = ids.get(i);
             RentAMedicResult result = rentAMedicResultMap.get(id);
             int activeBanCount = PlayerCheckService.countActiveRentAMedicBans(result);
-            int totalBans = result.getCommunityBans().size();
+            int totalBans = result.getCommunityBans() == null ? 0 : result.getCommunityBans().size();
             String[] values = {
                     steamPlayerSummaryMap.get(id).getPersonaname(),
                     id.toString(),

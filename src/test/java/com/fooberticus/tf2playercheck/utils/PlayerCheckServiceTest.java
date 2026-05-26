@@ -93,4 +93,17 @@ public class PlayerCheckServiceTest {
     void formatCheaterDate_returnsPlaceholderForNull() {
         assertEquals("--", PlayerCheckService.formatCheaterDate(null));
     }
+
+    @Test
+    void findLatestBan_skipsNullTimestampBans() {
+        SourceBan nullTs = new SourceBan(); // no timestamp set (null)
+        SourceBan dated = new SourceBan(); dated.setBanTimestamp(1000000000L);
+
+        assertSame(dated, PlayerCheckService.findLatestBan(List.of(nullTs, dated)));
+    }
+
+    @Test
+    void formatCheaterDate_handlesStringWithNoT() {
+        assertEquals("2023-01-15", PlayerCheckService.formatCheaterDate("2023-01-15"));
+    }
 }

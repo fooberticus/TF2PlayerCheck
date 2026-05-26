@@ -37,11 +37,12 @@ public final class PlayerCheckService {
         if (bans == null || bans.isEmpty()) {
             return null;
         }
-        SourceBan latest = null;
-        LocalDate latestDate = null;
-        for (SourceBan ban : bans) {
+        SourceBan latest = bans.get(0);
+        LocalDate latestDate = SteamUtils.getLocalDateFromTimestamp(latest.getBanTimestamp());
+        for (int i = 1; i < bans.size(); i++) {
+            SourceBan ban = bans.get(i);
             LocalDate banDate = SteamUtils.getLocalDateFromTimestamp(ban.getBanTimestamp());
-            if (latestDate == null || (banDate != null && banDate.isAfter(latestDate))) {
+            if (banDate != null && (latestDate == null || banDate.isAfter(latestDate))) {
                 latest = ban;
                 latestDate = banDate;
             }
@@ -57,6 +58,8 @@ public final class PlayerCheckService {
     }
 
     public static String formatCheaterDate(String timestamp) {
-        return timestamp == null ? "--" : timestamp.substring(0, timestamp.indexOf("T"));
+        if (timestamp == null) return "--";
+        int tIdx = timestamp.indexOf("T");
+        return tIdx >= 0 ? timestamp.substring(0, tIdx) : timestamp;
     }
 }
