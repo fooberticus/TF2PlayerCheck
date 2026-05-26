@@ -1,5 +1,6 @@
 package com.fooberticus.tf2playercheck.gui.panels;
 
+import com.fooberticus.tf2playercheck.models.CheckResults;
 import com.fooberticus.tf2playercheck.models.rentamedic.RentAMedicResult;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerBan;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerSummary;
@@ -29,12 +30,12 @@ public class RentAMedicPanel extends BaseResultsPanel {
     private final Map<Long, List<SourceBan>> sourceBanMap;
     private final Map<Long, RentAMedicResult> rentAMedicResultMap;
 
-    public RentAMedicPanel(Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, List<SourceBan>> sourceBanMap, Map<Long, RentAMedicResult> rentAMedicResultMap) {
+    public RentAMedicPanel(CheckResults results) {
         super();
-        this.steamPlayerSummaryMap = steamPlayerSummaryMap;
-        this.steamPlayerBanMap = steamPlayerBanMap;
-        this.sourceBanMap = sourceBanMap;
-        this.rentAMedicResultMap = rentAMedicResultMap;
+        this.steamPlayerSummaryMap = results.steamPlayerSummaryMap();
+        this.steamPlayerBanMap = results.steamPlayerBanMap();
+        this.sourceBanMap = results.sourceBanMap();
+        this.rentAMedicResultMap = results.rentAMedicResultMap();
         formatResults();
     }
 
@@ -81,7 +82,7 @@ public class RentAMedicPanel extends BaseResultsPanel {
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    GuiUtil.openURLInBrowser(RENT_A_MEDIC_URI + table.getValueAt(row, 1));
+                    GuiUtil.openURLInBrowser(RENT_A_MEDIC_URI + table.getValueAt(row, STEAM64_ID_COL));
                 }
             }
         });

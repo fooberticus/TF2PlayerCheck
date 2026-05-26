@@ -1,6 +1,7 @@
 package com.fooberticus.tf2playercheck.gui.frames;
 
 import com.fooberticus.tf2playercheck.gui.panels.LoadingPanel;
+import com.fooberticus.tf2playercheck.models.CheckResults;
 import com.fooberticus.tf2playercheck.models.backpack.BackpackUsersResponse;
 import com.fooberticus.tf2playercheck.models.rentamedic.RentAMedicResponse;
 import com.fooberticus.tf2playercheck.models.rentamedic.RentAMedicResult;
@@ -40,19 +41,7 @@ public class MainWindow extends JFrame {
 
     private final CustomRestClient client = new CustomRestClient();
 
-    Map<Long, List<SourceBan>> sourceBanMap;
-    Map<Long, SteamPlayerBan> steamPlayerBanMap;
-    Map<Long, SteamPlayerSummary> steamPlayerSummaryMap;
-    Map<Long, RentAMedicResult> rentAMedicResultMap;
-    Map<Long, BackpackUsersResponse.BackpackPlayer> backpackPlayerMap;
-
     public MainWindow() {
-        sourceBanMap = new HashMap<>();
-        steamPlayerBanMap = new HashMap<>();
-        steamPlayerSummaryMap = new HashMap<>();
-        rentAMedicResultMap = new HashMap<>();
-        backpackPlayerMap = new HashMap<>();
-
         initComponents();
 
         statusTextArea.addMouseListener(new MouseAdapter() {
@@ -90,7 +79,7 @@ public class MainWindow extends JFrame {
         statusTextArea.requestFocusInWindow();
     }
 
-    private void loadSteamHistory(List<ServerPlayer> serverPlayers) {
+    private void loadSteamHistory(List<ServerPlayer> serverPlayers, Map<Long, List<SourceBan>> sourceBanMap) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>(){
             @Override
             protected Void doInBackground() throws Exception {
@@ -107,11 +96,10 @@ public class MainWindow extends JFrame {
                 return null;
             }
         };
-
         showLoadingDialog(mySwingWorker, "checking for community bans...");
     }
 
-    private void loadSteamBans(List<ServerPlayer> serverPlayers) {
+    private void loadSteamBans(List<ServerPlayer> serverPlayers, Map<Long, SteamPlayerBan> steamPlayerBanMap) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>(){
             @Override
             protected Void doInBackground() throws Exception {
@@ -129,11 +117,10 @@ public class MainWindow extends JFrame {
                 return null;
             }
         };
-
         showLoadingDialog(mySwingWorker, "checking for steam bans...");
     }
 
-    private void loadSteamSummaries(List<ServerPlayer> serverPlayers) {
+    private void loadSteamSummaries(List<ServerPlayer> serverPlayers, Map<Long, SteamPlayerSummary> steamPlayerSummaryMap) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>(){
             @Override
             protected Void doInBackground() throws Exception {
@@ -147,11 +134,10 @@ public class MainWindow extends JFrame {
                 return null;
             }
         };
-
         showLoadingDialog(mySwingWorker, "retrieving user info...");
     }
 
-    private void loadRentAMedicCheaters(List<ServerPlayer> serverPlayers) {
+    private void loadRentAMedicCheaters(List<ServerPlayer> serverPlayers, Map<Long, RentAMedicResult> rentAMedicResultMap) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
@@ -166,11 +152,10 @@ public class MainWindow extends JFrame {
                 return null;
             }
         };
-
         showLoadingDialog(mySwingWorker, "checking rent-a-medic for cheaters...");
     }
 
-    private void loadBackpackPlayers(List<ServerPlayer> serverPlayers) {
+    private void loadBackpackPlayers(List<ServerPlayer> serverPlayers, Map<Long, BackpackUsersResponse.BackpackPlayer> backpackPlayerMap) {
         SwingWorker<Void, Void> mySwingWorker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
@@ -187,7 +172,6 @@ public class MainWindow extends JFrame {
                 return null;
             }
         };
-
         showLoadingDialog(mySwingWorker, "retrieving backpack values...");
     }
 
@@ -238,7 +222,6 @@ public class MainWindow extends JFrame {
             int result = JOptionPane.showConfirmDialog(this,
                     serverPlayers.size() + " Steam IDs found. Requests will be processed in batches of 100 until complete.",
                     "Confirm", JOptionPane.OK_CANCEL_OPTION);
-
             if (result != JOptionPane.OK_OPTION) {
                 return;
             }
@@ -246,25 +229,30 @@ public class MainWindow extends JFrame {
 
         disableButtons();
 
+        Map<Long, List<SourceBan>> sourceBanMap = new HashMap<>();
+        Map<Long, SteamPlayerBan> steamPlayerBanMap = new HashMap<>();
+        Map<Long, SteamPlayerSummary> steamPlayerSummaryMap = new HashMap<>();
+        Map<Long, RentAMedicResult> rentAMedicResultMap = new HashMap<>();
+        Map<Long, BackpackUsersResponse.BackpackPlayer> backpackPlayerMap = new HashMap<>();
+
         int chunkSize = 100;
         int size = serverPlayers.size();
         for (int i = 0; i < size; i += chunkSize) {
             List<ServerPlayer> subList = serverPlayers.subList(i, Math.min(i + chunkSize, size));
-
-            loadSteamSummaries(subList);
-            loadSteamBans(subList);
-            loadRentAMedicCheaters(subList);
-            loadSteamHistory(subList);
-            loadBackpackPlayers(subList);
+            loadSteamSummaries(subList, steamPlayerSummaryMap);
+            loadSteamBans(subList, steamPlayerBanMap);
+            loadRentAMedicCheaters(subList, rentAMedicResultMap);
+            loadSteamHistory(subList, sourceBanMap);
+            loadBackpackPlayers(subList, backpackPlayerMap);
         }
 
-        ResultsWindow.startResultsWindow(new HashMap<>(sourceBanMap), new HashMap<>(steamPlayerBanMap), new HashMap<>(rentAMedicResultMap), new HashMap<>(steamPlayerSummaryMap), new HashMap<>(backpackPlayerMap), serverPlayers);
-
-        sourceBanMap.clear();
-        steamPlayerBanMap.clear();
-        rentAMedicResultMap.clear();
-        steamPlayerSummaryMap.clear();
-        backpackPlayerMap.clear();
+        ResultsWindow.startResultsWindow(new CheckResults(
+                new HashMap<>(sourceBanMap),
+                new HashMap<>(steamPlayerBanMap),
+                new HashMap<>(steamPlayerSummaryMap),
+                new HashMap<>(rentAMedicResultMap),
+                new HashMap<>(backpackPlayerMap),
+                serverPlayers));
 
         enableButtons();
     }

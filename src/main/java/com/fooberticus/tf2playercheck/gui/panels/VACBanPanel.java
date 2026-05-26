@@ -1,5 +1,6 @@
 package com.fooberticus.tf2playercheck.gui.panels;
 
+import com.fooberticus.tf2playercheck.models.CheckResults;
 import com.fooberticus.tf2playercheck.models.rentamedic.RentAMedicResult;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerBan;
 import com.fooberticus.tf2playercheck.models.steam.SteamPlayerSummary;
@@ -28,13 +29,16 @@ public class VACBanPanel extends BaseResultsPanel {
     private final Map<Long, RentAMedicResult> rentAMedicResultMap;
 
     private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "VAC Banned", "VAC Bans", "Game Bans", "Days Since Last"};
+    private static final int COL_VAC_BANS = 3;
+    private static final int COL_GAME_BANS = 4;
+    private static final int COL_DAYS_SINCE = 5;
 
-    public VACBanPanel(Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, List<SourceBan>> sourceBanMap, Map<Long, RentAMedicResult> rentAMedicResultMap) {
+    public VACBanPanel(CheckResults results) {
         super();
-        this.steamPlayerSummaryMap = steamPlayerSummaryMap;
-        this.steamPlayerBanMap = steamPlayerBanMap;
-        this.sourceBanMap = sourceBanMap;
-        this.rentAMedicResultMap = rentAMedicResultMap;
+        this.steamPlayerSummaryMap = results.steamPlayerSummaryMap();
+        this.steamPlayerBanMap = results.steamPlayerBanMap();
+        this.sourceBanMap = results.sourceBanMap();
+        this.rentAMedicResultMap = results.rentAMedicResultMap();
         formatResults();
     }
 
@@ -68,15 +72,15 @@ public class VACBanPanel extends BaseResultsPanel {
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
 
-        sorter.setComparator(3, IntegerStringComparator.INSTANCE);
-        sorter.setComparator(4, IntegerStringComparator.INSTANCE);
-        sorter.setComparator(5, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(COL_VAC_BANS, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(COL_GAME_BANS, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(COL_DAYS_SINCE, IntegerStringComparator.INSTANCE);
 
         table.setRowSorter(sorter);
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-        sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING));
-        sortKeys.add(new RowSorter.SortKey(5, SortOrder.DESCENDING));
+        sortKeys.add(new RowSorter.SortKey(COL_VAC_BANS, SortOrder.DESCENDING));
+        sortKeys.add(new RowSorter.SortKey(COL_DAYS_SINCE, SortOrder.DESCENDING));
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
 
@@ -86,7 +90,7 @@ public class VACBanPanel extends BaseResultsPanel {
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    String url = STEAM_COMMUNITY_URI + table.getValueAt(row, 1);
+                    String url = STEAM_COMMUNITY_URI + table.getValueAt(row, STEAM64_ID_COL);
                     GuiUtil.openURLInBrowser(url);
                 }
             }

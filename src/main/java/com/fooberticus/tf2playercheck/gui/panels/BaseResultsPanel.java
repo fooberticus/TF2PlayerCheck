@@ -24,6 +24,7 @@ public class BaseResultsPanel extends JPanel {
     public static final String STEAM_HISTORY_URI = "https://steamhistory.net/id/";
     public static final String RENT_A_MEDIC_URI = "https://rentamedic.org/cheaters/";
     public static final String BACKPACKTF_PROFILE_URI = "https://backpack.tf/profiles/";
+    protected static final int STEAM64_ID_COL = 1;
 
     JScrollPane scrollPane;
 
@@ -243,8 +244,7 @@ public class BaseResultsPanel extends JPanel {
             int col = jTable.columnAtPoint(point);
             jTable.changeSelection( row, col, !( jTable.isRowSelected( row ) ), false );
 
-            // this relies on the 2nd column to always be the Steam64 ID
-            Long id = Long.valueOf( (String) jTable.getValueAt(row, 1) );
+            Long id = Long.valueOf((String) jTable.getValueAt(row, STEAM64_ID_COL));
 
             PopUpMenu menu = new PopUpMenu(playerSummaryMap, steamPlayerBanMap, steamHistoryMap, rentAMedicResultMap, id);
             menu.show(e.getComponent(), e.getX(), e.getY());

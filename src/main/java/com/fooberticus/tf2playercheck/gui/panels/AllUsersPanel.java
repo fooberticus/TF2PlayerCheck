@@ -1,5 +1,6 @@
 package com.fooberticus.tf2playercheck.gui.panels;
 
+import com.fooberticus.tf2playercheck.models.CheckResults;
 import com.fooberticus.tf2playercheck.models.backpack.BackpackUsersResponse;
 import com.fooberticus.tf2playercheck.models.rentamedic.RentAMedicResult;
 import com.fooberticus.tf2playercheck.models.server.ServerPlayer;
@@ -26,6 +27,8 @@ import java.util.List;
 public class AllUsersPanel extends BaseResultsPanel {
 
     private static final String[] HEADER_ROW = {"User Name", "Steam64 ID", "Time on Server", "Ping", "Profile Visibility", "Profile Created", "Backpack Value"};
+    private static final int COL_PING = 3;
+    private static final int COL_BACKPACK_VALUE = 6;
 
     private final Map<Long, SteamPlayerSummary> playerSummaryMap;
     private final Map<Long, SteamPlayerBan> steamPlayerBanMap;
@@ -34,16 +37,16 @@ public class AllUsersPanel extends BaseResultsPanel {
     private final Map<Long, RentAMedicResult> rentAMedicResultMap;
     private final Map<Long, BackpackUsersResponse.BackpackPlayer> backpackPlayerMap;
 
-    public AllUsersPanel (Map<Long, SteamPlayerSummary> steamPlayerSummaryMap, Map<Long, SteamPlayerBan> steamPlayerBanMap, Map<Long, List<SourceBan>> sourceBanMap, Map<Long, RentAMedicResult> rentAMedicResultMap, Map<Long, BackpackUsersResponse.BackpackPlayer> backpackPlayerMap, List<ServerPlayer> serverPlayers) {
+    public AllUsersPanel(CheckResults results) {
         super();
-        this.playerSummaryMap = steamPlayerSummaryMap;
-        this.steamPlayerBanMap = steamPlayerBanMap;
-        this.sourceBanMap = sourceBanMap;
-        this.rentAMedicResultMap = rentAMedicResultMap;
-        this.backpackPlayerMap = backpackPlayerMap;
+        this.playerSummaryMap = results.steamPlayerSummaryMap();
+        this.steamPlayerBanMap = results.steamPlayerBanMap();
+        this.sourceBanMap = results.sourceBanMap();
+        this.rentAMedicResultMap = results.rentAMedicResultMap();
+        this.backpackPlayerMap = results.backpackPlayerMap();
 
         serverPlayerMap = new HashMap<>();
-        serverPlayers.forEach(serverPlayer -> serverPlayerMap.put( serverPlayer.getSteam64Id(), serverPlayer ) );
+        results.serverPlayers().forEach(sp -> serverPlayerMap.put(sp.getSteam64Id(), sp));
 
         formatResults();
     }
@@ -76,8 +79,8 @@ public class AllUsersPanel extends BaseResultsPanel {
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
 
-        sorter.setComparator(3, IntegerStringComparator.INSTANCE);
-        sorter.setComparator(6, CurrencyStringComparator.INSTANCE);
+        sorter.setComparator(COL_PING, IntegerStringComparator.INSTANCE);
+        sorter.setComparator(COL_BACKPACK_VALUE, CurrencyStringComparator.INSTANCE);
 
         table.setRowSorter(sorter);
 
@@ -91,7 +94,7 @@ public class AllUsersPanel extends BaseResultsPanel {
                 Point point = event.getPoint();
                 int row = jTable.rowAtPoint(point);
                 if (event.getClickCount() == 2 && jTable.getSelectedRow() != -1) {
-                    String url = STEAM_COMMUNITY_URI + table.getValueAt(row, 1);
+                    String url = STEAM_COMMUNITY_URI + table.getValueAt(row, STEAM64_ID_COL);
                     GuiUtil.openURLInBrowser(url);
                 }
             }
