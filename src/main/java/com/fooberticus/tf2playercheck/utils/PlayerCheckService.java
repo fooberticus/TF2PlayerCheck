@@ -58,7 +58,7 @@ public final class PlayerCheckService {
     }
 
     public static String formatCheaterDate(String timestamp) {
-        if (timestamp == null) return "--";
+        if (timestamp == null || timestamp.isEmpty()) return "--";
         int tIdx = timestamp.indexOf("T");
         return tIdx >= 0 ? timestamp.substring(0, tIdx) : timestamp;
     }

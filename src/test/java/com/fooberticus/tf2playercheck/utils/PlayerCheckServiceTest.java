@@ -95,15 +95,28 @@ public class PlayerCheckServiceTest {
     }
 
     @Test
-    void findLatestBan_skipsNullTimestampBans() {
-        SourceBan nullTs = new SourceBan(); // no timestamp set (null)
+    void findLatestBan_datedBanWinsOverNullTimestampBan() {
         SourceBan dated = new SourceBan(); dated.setBanTimestamp(1000000000L);
+        SourceBan nullTs = new SourceBan(); // no timestamp set
 
-        assertSame(dated, PlayerCheckService.findLatestBan(List.of(nullTs, dated)));
+        // dated ban first, null-ts ban second — old buggy code would overwrite dated with nullTs
+        assertSame(dated, PlayerCheckService.findLatestBan(List.of(dated, nullTs)));
+    }
+
+    @Test
+    void findLatestBan_allNullTimestamps_returnsFirstElement() {
+        SourceBan a = new SourceBan();
+        SourceBan b = new SourceBan();
+        assertSame(a, PlayerCheckService.findLatestBan(List.of(a, b)));
     }
 
     @Test
     void formatCheaterDate_handlesStringWithNoT() {
         assertEquals("2023-01-15", PlayerCheckService.formatCheaterDate("2023-01-15"));
+    }
+
+    @Test
+    void formatCheaterDate_returnsPlaceholderForEmptyString() {
+        assertEquals("--", PlayerCheckService.formatCheaterDate(""));
     }
 }
