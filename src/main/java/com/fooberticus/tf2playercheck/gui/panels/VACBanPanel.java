@@ -44,7 +44,13 @@ public class VACBanPanel extends BaseResultsPanel {
 
     private void formatResults() {
         List<Long> ids = steamPlayerBanMap.keySet().stream()
-                .filter(steamPlayerSummaryMap::containsKey)
+                .filter(id -> {
+                    if (!steamPlayerSummaryMap.containsKey(id)) {
+                        log.info("steam64 id {} is in steamPlayerBanMap, but not in steamPlayerSummaryMap", id);
+                        return false;
+                    }
+                    return true;
+                })
                 .toList();
         String[][] tableContents = new String[ids.size()][HEADER_ROW.length];
 
