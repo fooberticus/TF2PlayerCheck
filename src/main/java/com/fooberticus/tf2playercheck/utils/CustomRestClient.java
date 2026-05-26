@@ -20,104 +20,71 @@ import java.util.List;
 @Slf4j
 public final class CustomRestClient {
 
-    public static final String STEAM_HISTORY_ENDPOINT = "https://steamhistory.net/api/sourcebans";
-    public static final String STEAM_API_PLAYER_BANS_ENDPOINT = "https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/";
-    public static final String STEAM_API_PLAYER_SUMMARY_ENDPOINT = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
-    public static final String RENT_A_MEDIC_ENDPOINT = "https://rentamedic.org/api/cheaters/lookup";
-    public static final String BACKPACK_USERS_ENDPOINT = "https://backpack.tf/api/IGetUsers/v3";
-
-    private static final Gson gson;
-
-    static {
-        gson = new Gson();
-    }
+    private static final Gson gson = new Gson();
 
     public SourceBanResponse getSourceBans(List<ServerPlayer> serverPlayers) {
-        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
-        String ids = StringUtils.join(steam64Ids, ",");
-        String url = STEAM_HISTORY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamHistoryApiKey() + "&steamids=" + ids;
-        try {
-            return getRequest(url, SourceBanResponse.class);
-        } catch (RestCallException e) {
-            GuiUtil.showSystemTrayError("Error making SteamHistory.net api call, try again. If you continue to see this error, check your API key settings!");
-            log.error("Unable to make steam history api call: {}", e.getMessage());
-        }
-        return null;
+        String url = ApiEndpoint.STEAM_HISTORY.url + "?key=" + GuiUtil.getSavedSteamHistoryApiKey() + "&steamids=" + buildSteamIdString(serverPlayers);
+        return fetchWithErrorHandling(url, SourceBanResponse.class,
+                "Error making SteamHistory.net api call, try again. If you continue to see this error, check your API key settings!");
     }
 
     public SteamPlayerBansResponse getSteamPlayerBans(List<ServerPlayer> serverPlayers) {
-        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
-        String ids = StringUtils.join(steam64Ids, ",");
-        String url = STEAM_API_PLAYER_BANS_ENDPOINT + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + ids;
-        try {
-            return getRequest(url, SteamPlayerBansResponse.class);
-        } catch (RestCallException e) {
-            GuiUtil.showSystemTrayError("Error making Steam api call, try again. If you continue to see this error, check your API key settings!");
-            log.error("Unable to make steam api player bans api call: {}", e.getMessage());
-        }
-        return null;
+        String url = ApiEndpoint.STEAM_BANS.url + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + buildSteamIdString(serverPlayers);
+        return fetchWithErrorHandling(url, SteamPlayerBansResponse.class,
+                "Error making Steam api call, try again. If you continue to see this error, check your API key settings!");
     }
 
     public SteamPlayerSummaryResponse getSteamPlayerSummaries(List<ServerPlayer> serverPlayers) {
-        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
-        String ids = StringUtils.join(steam64Ids, ",");
-        String url = STEAM_API_PLAYER_SUMMARY_ENDPOINT + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + ids;
-        try {
-            return getRequest(url, SteamPlayerSummaryResponse.class);
-        } catch (RestCallException e) {
-            GuiUtil.showSystemTrayError("Error making Steam api call, try again. If you continue to see this error, check your API key settings!");
-            log.error("Unable to make steam api player summaries api call: {}", e.getMessage());
-        }
-        return null;
+        String url = ApiEndpoint.STEAM_SUMMARIES.url + "?key=" + GuiUtil.getSavedSteamApiKey() + "&steamids=" + buildSteamIdString(serverPlayers);
+        return fetchWithErrorHandling(url, SteamPlayerSummaryResponse.class,
+                "Error making Steam api call, try again. If you continue to see this error, check your API key settings!");
     }
 
     public RentAMedicResponse getRentAMedicCheaters(List<ServerPlayer> serverPlayers) {
-        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
-        String ids = StringUtils.join(steam64Ids, ",");
-        String url = RENT_A_MEDIC_ENDPOINT + "?steamids=" + ids;
-        try {
-            return getRequest(url, RentAMedicResponse.class);
-        } catch (RestCallException e) {
-            GuiUtil.showSystemTrayError("Error making Rent-a-Medic api call, try again. If you continue to see this error, check your API key settings!");
-            log.error("Unable to make rentamedic api call: {}", e.getMessage());
-        }
-        return null;
+        String url = ApiEndpoint.RENT_A_MEDIC.url + "?steamids=" + buildSteamIdString(serverPlayers);
+        return fetchWithErrorHandling(url, RentAMedicResponse.class,
+                "Error making Rent-a-Medic api call, try again. If you continue to see this error, check your API key settings!");
     }
 
     public BackpackUsersResponse getBackpackUsers(List<ServerPlayer> serverPlayers) {
-        BackpackUsersResponse response;
-        List<Long> steam64Ids = SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers);
-        String ids = StringUtils.join(steam64Ids, ",");
         try {
-            String encodedIds = URLEncoder.encode(ids, StandardCharsets.UTF_8);
-            String url = BACKPACK_USERS_ENDPOINT + "?key=" + GuiUtil.getSavedBackpackTfApiKey() + "&steamids=" + encodedIds;
-            response = getRequest(url, BackpackUsersResponse.class);
+            String encodedIds = URLEncoder.encode(buildSteamIdString(serverPlayers), StandardCharsets.UTF_8);
+            String url = ApiEndpoint.BACKPACK_TF.url + "?key=" + GuiUtil.getSavedBackpackTfApiKey() + "&steamids=" + encodedIds;
+            return getRequest(url, BackpackUsersResponse.class);
         } catch (Exception e) {
-            // backpack.tf api throws a lot of 502 errors, if it does, return an empty response
             GuiUtil.showSystemTrayError("Error making Backpack.tf api call, try again. If you continue to see this error, check your API key settings!");
             log.error("Unable to make backpacktf api call: {}", e.getMessage());
-            response = new BackpackUsersResponse();
-            BackpackUsersResponse.ResponseData responseData = new BackpackUsersResponse.ResponseData();
-            responseData.setPlayers(new HashMap<>());
-            BackpackUsersResponse.BackpackPlayer emptyPlayer = new BackpackUsersResponse.BackpackPlayer();
-            response.setResponse(responseData);
-            serverPlayers.forEach(serverPlayer -> {
-                responseData.getPlayers().put(serverPlayer.getSteam64Id().toString(), emptyPlayer);
-            });
+            return buildEmptyBackpackResponse(serverPlayers);
         }
+    }
+
+    private String buildSteamIdString(List<ServerPlayer> serverPlayers) {
+        return StringUtils.join(SteamUtils.getPlayerIdsFromServerPlayerList(serverPlayers), ",");
+    }
+
+    private <T> T fetchWithErrorHandling(String url, Class<T> responseType, String errorMsg) {
+        try {
+            return getRequest(url, responseType);
+        } catch (RestCallException e) {
+            GuiUtil.showSystemTrayError(errorMsg);
+            log.error("API call failed [{}]: {}", url, e.getMessage());
+            return null;
+        }
+    }
+
+    private BackpackUsersResponse buildEmptyBackpackResponse(List<ServerPlayer> serverPlayers) {
+        BackpackUsersResponse response = new BackpackUsersResponse();
+        BackpackUsersResponse.ResponseData responseData = new BackpackUsersResponse.ResponseData();
+        responseData.setPlayers(new HashMap<>());
+        BackpackUsersResponse.BackpackPlayer emptyPlayer = new BackpackUsersResponse.BackpackPlayer();
+        response.setResponse(responseData);
+        serverPlayers.forEach(p -> responseData.getPlayers().put(p.getSteam64Id().toString(), emptyPlayer));
         return response;
     }
 
-    /** Reusable method for making GET requests.
-     *
-     * @param url String url of the endpoint being called.
-     * @param responseType Type representing the desired response type.
-     * @return Response object of responseType returned from the rest call.
-     */
     protected <T> T getRequest(String url, Class<T> responseType) throws RestCallException {
         log.info("GET {}", url);
         T response = null;
-
         try {
             RestClient client = RestClient.create().build();
             String rawResponse = client
@@ -138,7 +105,6 @@ public final class CustomRestClient {
             log.error("EXCEPTION CAUGHT: {}", e.getMessage(), e);
             log.error("#############################################");
         }
-
         return response;
     }
 }
