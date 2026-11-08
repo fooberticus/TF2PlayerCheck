@@ -13,7 +13,9 @@ import com.fooberticus.tf2playercheck.models.steam.SteamPlayerSummaryResponse;
 import com.fooberticus.tf2playercheck.models.steamhistory.SourceBan;
 import com.fooberticus.tf2playercheck.models.steamhistory.SourceBanResponse;
 import com.fooberticus.tf2playercheck.utils.CustomRestClient;
+import com.fooberticus.tf2playercheck.utils.G15Parser;
 import com.fooberticus.tf2playercheck.utils.GuiUtil;
+import com.fooberticus.tf2playercheck.utils.RconClient;
 import com.fooberticus.tf2playercheck.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,10 +30,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Fooberticus
@@ -72,6 +78,10 @@ public class MainWindow extends JFrame {
 
     private void openAppearanceConfiguration() {
         AppearanceWindow.startAppearanceWindow();
+    }
+
+    private void openRCONConfiguration() {
+        RCONConfigWindow.startRCONConfigWindow();
     }
 
     private void clear() {
@@ -175,7 +185,7 @@ public class MainWindow extends JFrame {
         showLoadingDialog(mySwingWorker, "retrieving backpack values...");
     }
 
-    private void showLoadingDialog(SwingWorker<Void, Void> mySwingWorker, String labelText) {
+    private void showLoadingDialog(SwingWorker<?, ?> mySwingWorker, String labelText) {
         final JDialog dialog = new JDialog(this, null, Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setUndecorated(true);
         dialog.add(new LoadingPanel(labelText));
@@ -218,6 +228,11 @@ public class MainWindow extends JFrame {
             return;
         }
 
+        checkServerPlayers(serverPlayers);
+    }
+
+    /** Looks up every player and opens the results window. */
+    private void checkServerPlayers(List<ServerPlayer> serverPlayers) {
         if (serverPlayers.size() > 100) {
             int result = JOptionPane.showConfirmDialog(this,
                     serverPlayers.size() + " Steam IDs found. Requests will be processed in batches of 100 until complete.",
@@ -311,6 +326,82 @@ public class MainWindow extends JFrame {
         clearButton.setEnabled(false);
     }
 
+    private void getServerStatusClicked() {
+        if (!RconClient.hasValidSavedSettings()) {
+            JOptionPane.showMessageDialog(this,
+                    "Get Server Status reads the player list straight from TF2, so you don't\n"
+                            + "have to copy and paste the output of the status command yourself.\n\n"
+                            + "It uses RCON, a remote console feature built into TF2. To set it up:\n"
+                            + "1. Open Settings > RCON Config.\n"
+                            + "2. Enter a port and a password, then click Save.\n"
+                            + "3. Click Copy Launcher Params and follow the steps to add them to TF2.\n"
+                            + "4. Restart TF2 and join a server, then click Get Server Status again.",
+                    "RCON Not Configured",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        SwingWorker<String, Void> worker = new SwingWorker<>() {
+            @Override
+            protected String doInBackground() throws Exception {
+                return RconClient.fetchG15Dump();
+            }
+        };
+        // Modal: returns once the worker is done.
+        showLoadingDialog(worker, "getting player list from TF2...");
+
+        String dump;
+        try {
+            dump = worker.get();
+        } catch (ExecutionException e) {
+            showRconError(e.getCause() != null ? e.getCause() : e);
+            return;
+        } catch (InterruptedException | CancellationException e) {
+            log.info("get server status cancelled");
+            return;
+        }
+
+        if (G15Parser.isG15Disabled(dump)) {
+            JOptionPane.showMessageDialog(this,
+                    "TF2 was started without the -g15 launch option, which Get Server Status\n"
+                            + "needs to read the player list.\n\n"
+                            + "Add -g15 to TF2's launch options, or copy them again from\n"
+                            + "Settings > RCON Config, then restart TF2.",
+                    "TF2 Needs -g15",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        List<ServerPlayer> players = G15Parser.parse(dump);
+        if (players.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Connected to TF2, but no players were found.\n\n"
+                            + "Join a server, then try again.",
+                    "No Players Found",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        checkServerPlayers(players);
+    }
+
+    private void showRconError(Throwable cause) {
+        log.error("Unable to get server status over RCON: {}", cause.toString());
+
+        String reason = cause instanceof SocketTimeoutException
+                ? "TF2 did not respond in time."
+                : Objects.requireNonNullElse(cause.getMessage(), cause.getClass().getSimpleName());
+
+        JOptionPane.showMessageDialog(this,
+                "Couldn't get the server status from TF2.\n\n"
+                        + "Reason: " + reason + "\n\n"
+                        + "Check that:\n"
+                        + "- TF2 is running and was started with the launch options from Settings > RCON Config.\n"
+                        + "- The port and password in Settings > RCON Config match those launch options.",
+                "RCON Connection Failed",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner non-commercial license
@@ -320,15 +411,17 @@ public class MainWindow extends JFrame {
         menu1 = new JMenu();
         menuItem1 = new JMenuItem();
         menuItem2 = new JMenuItem();
+        menuItem4 = new JMenuItem();
         clearButton = new JButton();
         checkUsersButton = new JButton();
         scrollPane1 = new JScrollPane();
         statusTextArea = new JTextArea();
+        button1 = new JButton();
 
         //======== this ========
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("TF2 Player Check"); //NON-NLS
+        setTitle("TF2 Player Check");
         var contentPane = getContentPane();
 
         //======== menuBar1 ========
@@ -336,10 +429,10 @@ public class MainWindow extends JFrame {
 
             //======== menu2 ========
             {
-                menu2.setText("File"); //NON-NLS
+                menu2.setText("File");
 
                 //---- menuItem3 ----
-                menuItem3.setText("Import..."); //NON-NLS
+                menuItem3.setText("Import...");
                 menuItem3.addActionListener(e -> importFromFile());
                 menu2.add(menuItem3);
             }
@@ -347,62 +440,76 @@ public class MainWindow extends JFrame {
 
             //======== menu1 ========
             {
-                menu1.setText("Settings"); //NON-NLS
+                menu1.setText("Settings");
 
                 //---- menuItem1 ----
-                menuItem1.setText("API Keys"); //NON-NLS
+                menuItem1.setText("API Keys");
                 menuItem1.addActionListener(e -> openAPIKeysConfiguration());
                 menu1.add(menuItem1);
 
                 //---- menuItem2 ----
-                menuItem2.setText("Appearance"); //NON-NLS
+                menuItem2.setText("Appearance");
                 menuItem2.addActionListener(e -> openAppearanceConfiguration());
                 menu1.add(menuItem2);
+
+                //---- menuItem4 ----
+                menuItem4.setText("RCON Config");
+                menuItem4.addActionListener(e -> openRCONConfiguration());
+                menu1.add(menuItem4);
             }
             menuBar1.add(menu1);
         }
         setJMenuBar(menuBar1);
 
         //---- clearButton ----
-        clearButton.setText("Clear"); //NON-NLS
+        clearButton.setText("Clear");
         clearButton.addActionListener(e -> clear());
 
         //---- checkUsersButton ----
-        checkUsersButton.setText("Check Users"); //NON-NLS
+        checkUsersButton.setText("Check Status Text");
         checkUsersButton.addActionListener(e -> checkUsers());
 
         //======== scrollPane1 ========
         {
 
             //---- statusTextArea ----
-            statusTextArea.setFont(new Font("Lucida Console", Font.PLAIN, 14)); //NON-NLS
+            statusTextArea.setFont(new Font("Lucida Console", Font.PLAIN, 14));
             scrollPane1.setViewportView(statusTextArea);
         }
+
+        //---- button1 ----
+        button1.setText("Check Current Server");
+        button1.addActionListener(e -> getServerStatusClicked());
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
-                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addGap(0, 261, Short.MAX_VALUE)
-                    .addComponent(checkUsersButton)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(clearButton)
-                    .addGap(14, 14, 14))
-                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
-                    .addContainerGap())
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(button1)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                            .addComponent(checkUsersButton)
+                            .addGap(18, 18, 18)
+                            .addComponent(clearButton)
+                            .addGap(14, 14, 14))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
+                            .addContainerGap())))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(clearButton)
-                        .addComponent(checkUsersButton))
+                        .addComponent(checkUsersButton)
+                        .addComponent(button1))
                     .addGap(14, 14, 14))
         );
         pack();
@@ -418,9 +525,11 @@ public class MainWindow extends JFrame {
     private JMenu menu1;
     private JMenuItem menuItem1;
     private JMenuItem menuItem2;
+    private JMenuItem menuItem4;
     private JButton clearButton;
     private JButton checkUsersButton;
     private JScrollPane scrollPane1;
     private JTextArea statusTextArea;
+    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

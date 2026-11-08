@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :0:261:x, comp checkUsersButton:::p::p, space :::p, comp clearButton:::p::p, space :p:14:p}, seq t {space :::p, comp scrollPane1::::486:x, space :::p}}"
-			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::252:x, space u:::p, par b {comp clearButton::b:p::p, comp checkUsersButton::b:p::p}, space :p:14:p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq {space :6:6:p, comp button1:::p::p, space ::88:x, comp checkUsersButton:::p::p, space s:::p, comp clearButton:::p::p, space :p:14:p}, seq {comp scrollPane1::::683:x, space :::p}}}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::347:x, space u:::p, par b {comp clearButton::b:p::p, comp checkUsersButton::b:p::p, comp button1::b:p::p}, space :p:14:p}}"
 		} ) {
 			name: "this"
 			"visible": true
@@ -18,7 +18,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "checkUsersButton"
-				"text": "Check Users"
+				"text": "Check Status Text"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkUsers", false ) )
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -27,6 +27,11 @@ new FormModel {
 					name: "statusTextArea"
 					"font": new java.awt.Font( "Lucida Console", 0, 14 )
 				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Check Current Server"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "getServerStatusClicked", false ) )
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "menuBar1"
@@ -52,11 +57,16 @@ new FormModel {
 						"text": "Appearance"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openAppearanceConfiguration", false ) )
 					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem4"
+						"text": "RCON Config"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openRCONConfiguration", false ) )
+					} )
 				} )
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 310 )
+			"size": new java.awt.Dimension( 465, 345 )
 		} )
 	}
 }

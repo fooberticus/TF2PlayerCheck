@@ -1,0 +1,15 @@
+# jpackage
+--type deb
+--name TF2PlayerCheck
+--vendor Fooberticus
+--app-image TF2PlayerCheck
+--app-version 1.1.1
+--description "Checks Team Fortress 2 players for VAC and community server bans"
+--resource-dir resources
+--license-file ../LICENSE.txt
+--icon resources/TF2PlayerCheck.png
+--linux-package-name tf2playercheck
+--linux-app-category games
+--linux-menu-group Game
+--linux-shortcut
+--verbose

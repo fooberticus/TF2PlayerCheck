@@ -1,0 +1,48 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp rconPortTextField::t::616:x, seq {par l {comp label1:::p::p, comp label2::l:p::p}, space :0:475:x}, comp rconPasswordTextField::l::616:x, seq t {comp button3:::p::p, space ::113:x, comp button2:::p::p, space s:::p, comp button1:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :::p, comp rconPortTextField:::p::p, space s:::p, comp label2:::p::p, space :::p, comp rconPasswordTextField:::p::p, space ::83:x, par l {par b:t {comp button1::b:p::p, comp button2::b:p::p}, comp button3::t:p::p}, space :::p}}"
+		} ) {
+			name: "this"
+			"title": "RCON Configuration"
+			"defaultCloseOperation": 2
+			"visible": true
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "RCON Port"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "rconPortTextField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "RCON Password"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "rconPasswordTextField"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Close"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "closeButtonClicked", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"text": "Save"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveButtonClicked", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button3"
+				"text": "Copy Launcher Params"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "copyLaunchParamsButtonClicked", false ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 420, 255 )
+		} )
+	}
+}

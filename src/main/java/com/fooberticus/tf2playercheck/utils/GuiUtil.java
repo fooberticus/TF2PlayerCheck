@@ -49,6 +49,9 @@ public final class GuiUtil {
     private static final String PROPERTY_STEAM_API_KEY = "steamApiKey";
     private static final String PROPERTY_BACKPACKTF_API_KEY = "backpackTfApiKey";
 
+    private static final String PROPERTY_RCON_PORT = "rconPort";
+    private static final String PROPERTY_RCON_PASSWORD = "rconPassword";
+
     static {
         prefs = Preferences.userRoot().node(NAMESPACE);
 
@@ -293,6 +296,24 @@ public final class GuiUtil {
 
     public static void saveBackpackTfApiKey(String key) {
         prefs.put(PROPERTY_BACKPACKTF_API_KEY, key);
+    }
+
+    /* RCON Utilities */
+
+    public static int getSavedRconPort() {
+        return prefs.getInt(PROPERTY_RCON_PORT, RconClient.DEFAULT_PORT);
+    }
+
+    public static void saveRconPort(int port) {
+        prefs.putInt(PROPERTY_RCON_PORT, port);
+    }
+
+    public static String getSavedRconPassword() {
+        return prefs.get(PROPERTY_RCON_PASSWORD, null);
+    }
+
+    public static void saveRconPassword(String password) {
+        prefs.put(PROPERTY_RCON_PASSWORD, password);
     }
 
     /* File Utilities */

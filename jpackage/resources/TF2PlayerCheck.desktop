@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=TF2 Player Check
+GenericName=Player Ban Checker
+Comment=APPLICATION_DESCRIPTION
+Keywords=TF2;Team Fortress 2;TF2PlayerCheck;Steam;VAC;ban;cheater;SourceBans;
+Exec=APPLICATION_LAUNCHER
+Icon=APPLICATION_ICON
+Terminal=false
+Categories=DEPLOY_BUNDLE_CATEGORY;
+# Must match the window's WM_CLASS so the dock groups the running app under this
+# entry. AWT derives it from the main class name, so update this if Main moves.
+StartupWMClass=com-fooberticus-tf2playercheck-Main

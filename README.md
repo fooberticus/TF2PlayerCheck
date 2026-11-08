@@ -145,3 +145,6 @@ If you're a Java developer, you can build the project with Maven:
 If you want to use `jpackage` to make an MSI and package up the JVM with a native executable, use the scripts found in the "jpackage"
 folder in the root of the project. Just copy the *jar-with-dependencies.jar into the `jpackage\jars` folder, update the version
 information in the files in the jpackage\opt folder, then run the batch script named `package-windows.bat` to create the MSI and Package with executable.
+
+On Linux, run `package-linux.sh` instead to create a .deb installer and Package with executable. This needs a JDK that includes jmods,
+plus `fakeroot` (on Ubuntu/Debian: `sudo apt install openjdk-25-jdk-headless fakeroot`).

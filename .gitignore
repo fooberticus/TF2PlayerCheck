@@ -1,6 +1,7 @@
 jpackage/jars/*
 jpackage/TF2PlayerCheck/
 jpackage/*.msi
+jpackage/*.deb
 jpackage/*.jar
 jpackage/*.zip
 
@@ -39,6 +40,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.claude
 
 ### Mac OS ###
 .DS_Store

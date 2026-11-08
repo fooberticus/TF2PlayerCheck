@@ -1,0 +1,2 @@
+# Normalize all text files to LF, on every OS and regardless of core.autocrlf
+* text=auto eol=lf
