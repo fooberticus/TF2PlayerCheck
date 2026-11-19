@@ -1,0 +1,101 @@
+# Builds the Windows release files with jpackage:
+#   TF2PlayerCheck-<version>.msi  installer
+#   TF2PlayerCheck-<version>.zip  portable app (unzip and run TF2PlayerCheck.exe)
+#   TF2PlayerCheck-<version>.jar  runnable jar with dependencies
+#
+# jpackage can only build Windows packages on Windows, so this runs on a GitHub-hosted
+# Windows runner. The runner comes with WiX Toolset 3.14, which jpackage needs for the MSI.
+#
+# Runs on every push, on version tags, and on demand from the Actions tab.
+# Download the files from the "Artifacts" section of the run, test them,
+# then attach them to the GitHub release.
+
+name: Windows build
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-2025
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+
+      # Temurin 24+ has no jmods folder; jpackage links the runtime from the JDK itself (JEP 493).
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - name: Read version from pom.xml
+        id: version
+        run: |
+          $version = ([xml](Get-Content pom.xml)).project.version
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $version"
+
+      - name: Check jpackage options match the pom.xml version
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          $checks = @(
+            @{ File = 'jpackage/opts/jpackage-image.opts'; Text = "--app-version $version" },
+            @{ File = 'jpackage/opts/jpackage-image.opts'; Text = "--main-jar TF2PlayerCheck-$version-jar-with-dependencies.jar" },
+            @{ File = 'jpackage/opts/jpackage-win.opts';   Text = "--app-version $version" }
+          )
+          $failed = $false
+          foreach ($check in $checks) {
+            if (-not (Select-String -Path $check.File -SimpleMatch $check.Text -Quiet)) {
+              Write-Host "::error file=$($check.File)::Expected '$($check.Text)'. Update the jpackage options to match pom.xml."
+              $failed = $true
+            }
+          }
+          if ($failed) { exit 1 }
+
+      - name: Build jar
+        # The SteamHistory integration test needs an API key saved on the machine, so it's skipped here.
+        run: mvn -B --no-transfer-progress clean package "-Dtest=!CustomRestClientIntegrationTest" "-Dsurefire.failIfNoSpecifiedTests=false"
+
+      - name: Package with jpackage
+        working-directory: jpackage
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          New-Item -ItemType Directory -Force jars | Out-Null
+          Copy-Item "../target/TF2PlayerCheck-$version-jar-with-dependencies.jar" jars/
+
+          # Quoted so PowerShell doesn't treat @ as splatting.
+          jpackage '@opts/jpackage-image.opts'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          jpackage '@opts/jpackage-win.opts'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Collect release files
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Move-Item "jpackage/TF2PlayerCheck-$version.msi" "dist/TF2PlayerCheck-$version.msi"
+          Copy-Item "target/TF2PlayerCheck-$version-jar-with-dependencies.jar" "dist/TF2PlayerCheck-$version.jar"
+          # jar writes a plain zip with forward-slash paths; the app folder is the zip's top level.
+          jar --create --no-manifest --file "dist/TF2PlayerCheck-$version.zip" -C jpackage TF2PlayerCheck
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-ChildItem dist | Format-Table Name, Length
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: TF2PlayerCheck-${{ steps.version.outputs.version }}-windows
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
