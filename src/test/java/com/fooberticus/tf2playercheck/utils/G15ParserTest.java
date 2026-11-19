@@ -58,8 +58,8 @@ public class G15ParserTest {
         List<ServerPlayer> players = G15Parser.parse(DUMP);
 
         assertEquals(2, players.size());
-        assertEquals(SteamUtils.STEAM_64_BASE + 1170385381L, players.get(0).getSteam64Id());
-        assertEquals("32", players.get(0).getPing());
+        assertEquals(SteamUtils.STEAM_64_BASE + 1170385381L, players.getFirst().getSteam64Id());
+        assertEquals("32", players.getFirst().getPing());
         assertEquals("RED", players.get(0).getTeam());
         assertEquals("--", players.get(0).getTimeOnServer());
         assertEquals(SteamUtils.STEAM_64_BASE + 1556121672L, players.get(1).getSteam64Id());

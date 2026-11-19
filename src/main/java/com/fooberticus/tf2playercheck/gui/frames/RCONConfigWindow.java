@@ -178,7 +178,6 @@ public class RCONConfigWindow extends JFrame {
         //======== this ========
         setTitle("RCON Configuration");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setVisible(true);
         var contentPane = getContentPane();
 
         //---- label1 ----

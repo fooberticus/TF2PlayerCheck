@@ -4,11 +4,10 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq {space :6:6:p, comp button1:::p::p, space ::88:x, comp checkUsersButton:::p::p, space s:::p, comp clearButton:::p::p, space :p:14:p}, seq {comp scrollPane1::::683:x, space :::p}}}}"
-			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::347:x, space u:::p, par b {comp clearButton::b:p::p, comp checkUsersButton::b:p::p, comp button1::b:p::p}, space :p:14:p}}"
+			"$horizontalGroup": "par l {seq {space :p:12:p, comp button1:::p::p, space ::88:x, comp checkUsersButton:::p::p, space s:::p, comp clearButton:::p::p, space :p:14:p}, seq t {space :::p, comp scrollPane1::::683:x, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::497:x, space u:::p, par b {comp clearButton::b:p::p, comp checkUsersButton::b:p::p, comp button1::b:p::p}, space :p:14:p}}"
 		} ) {
 			name: "this"
-			"visible": true
 			"defaultCloseOperation": 3
 			"title": "TF2 Player Check"
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -66,7 +65,7 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 465, 345 )
+			"size": new java.awt.Dimension( 465, 445 )
 		} )
 	}
 }

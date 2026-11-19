@@ -9,7 +9,6 @@ new FormModel {
 		} ) {
 			name: "this"
 			"title": "Appearance Configuration"
-			"visible": true
 			"defaultCloseOperation": 2
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"

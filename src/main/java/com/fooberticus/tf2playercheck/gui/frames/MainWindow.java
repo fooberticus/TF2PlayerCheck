@@ -20,6 +20,8 @@ import com.fooberticus.tf2playercheck.utils.SteamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -60,6 +62,26 @@ public class MainWindow extends JFrame {
                 }
             }
         });
+
+        // Check Status Text and Clear only make sense when the text box has something in it.
+        // invokeLater because importFromFile sets the text from a background thread.
+        statusTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(MainWindow.this::updateTextButtons);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(MainWindow.this::updateTextButtons);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                SwingUtilities.invokeLater(MainWindow.this::updateTextButtons);
+            }
+        });
+        updateTextButtons();
     }
 
     public static void startMainWindow() {
@@ -188,6 +210,8 @@ public class MainWindow extends JFrame {
     private void showLoadingDialog(SwingWorker<?, ?> mySwingWorker, String labelText) {
         final JDialog dialog = new JDialog(this, null, Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setUndecorated(true);
+        // With FlatLaf window decorations on, dialogs get a title bar even when undecorated.
+        dialog.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         dialog.add(new LoadingPanel(labelText));
         dialog.pack();
         dialog.setLocationRelativeTo(this);
@@ -269,7 +293,7 @@ public class MainWindow extends JFrame {
                 new HashMap<>(backpackPlayerMap),
                 List.copyOf(serverPlayers)));
 
-        enableButtons();
+        updateTextButtons();
     }
 
     private void importFromFile() {
@@ -316,9 +340,13 @@ public class MainWindow extends JFrame {
     }
 
 
-    private void enableButtons() {
-        checkUsersButton.setEnabled(true);
-        clearButton.setEnabled(true);
+    /** Enables Check Status Text and Clear only while the text box holds non-blank text. */
+    private void updateTextButtons() {
+        boolean hasText = !statusTextArea.getText().isBlank();
+        checkUsersButton.setEnabled(hasText);
+        clearButton.setEnabled(hasText);
+        checkUsersButton.setToolTipText(hasText ? null
+                : "Paste the output of TF2's 'status' console command into the text box first.");
     }
 
     private void disableButtons() {
@@ -419,7 +447,6 @@ public class MainWindow extends JFrame {
         button1 = new JButton();
 
         //======== this ========
-        setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("TF2 Player Check");
         var contentPane = getContentPane();
@@ -486,25 +513,23 @@ public class MainWindow extends JFrame {
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addGap(12, 12, 12)
+                    .addComponent(button1)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                    .addComponent(checkUsersButton)
+                    .addGap(18, 18, 18)
+                    .addComponent(clearButton)
+                    .addGap(14, 14, 14))
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(6, 6, 6)
-                            .addComponent(button1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-                            .addComponent(checkUsersButton)
-                            .addGap(18, 18, 18)
-                            .addComponent(clearButton)
-                            .addGap(14, 14, 14))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
-                            .addContainerGap())))
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
+                    .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(clearButton)

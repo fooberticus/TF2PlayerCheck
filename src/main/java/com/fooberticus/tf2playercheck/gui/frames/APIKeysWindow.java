@@ -108,7 +108,6 @@ public class APIKeysWindow extends JFrame {
         //======== this ========
         setTitle("API Key Configuration"); //NON-NLS
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setVisible(true);
         var contentPane = getContentPane();
 
         //---- label1 ----

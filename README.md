@@ -7,7 +7,8 @@
 
 Easy-to-use tools for checking Team Fortress 2 (TF2) players for VAC and community server bans. Know who you're playing with!
 
-This tool takes console output from the `status` command to check several different sources for player bans and other information, including:
+With one click, TF2 Player Check reads the player list straight from your running game (or from pasted `status` console output)
+and checks several different sources for player bans and other information, including:
 
 * Steam VAC and Game bans from Valve
 * Steam Community Server bans and other info from SteamHistory.net
@@ -15,21 +16,21 @@ This tool takes console output from the `status` command to check several differ
 * Backpack.tf TF2 inventory values
 * Time on server, ping, Steam ID and more
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/10-right-mouse-1.png)
+![TF2 Player Check main window with TF2 status output, and the Results window listing every player on the server with the right-click actions menu open](img/hero.png)
 
 ## Modern look and feel
 
 TF2PlayerCheck uses Flatlaf, with over a dozen popular themes for you to choose to customize your UI.
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-1.png)
+![](img/theme-1.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-2.png)
+![](img/theme-2.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-3.png)
+![](img/theme-3.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-4.png)
+![](img/theme-4.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/theme-5.png)
+![](img/theme-5.png)
 
 ## Installation and Enabling TF2 Developer Console
 
@@ -49,7 +50,7 @@ For more information about enabling the developer console, see the [TF2 Wiki](ht
 
 The first time you run the program, you'll be presented with the API Key Configuration menu:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/1-key-config.png)
+![](img/1-key-config.png)
 
 To use TF2PlayerCheck, you'll need API keys for the Steam API, SteamHistory.net API and Backpack.tf API.
 
@@ -71,66 +72,138 @@ You're ready to use TF2 Player Check!
 
 You can also adjust the appearance of the application using the Appearance Configuration window:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/2-appearance-config.png)
+![](img/2-appearance-config.png)
 
 You can access both of these configuration windows at any time from the Settings menu in the main window:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/3-settings-menu.png)
+![](img/3-settings-menu.png)
+
+## Optional Setup: One-Click Server Check (RCON)
+
+TF2 Player Check can read the player list straight from your running game.
+Click **Check Current Server** and the results window opens, no console needed.
+
+This uses RCON, a remote console feature built into TF2. It takes a one-time setup:
+
+1. In TF2 Player Check, open **Settings → RCON Config**.
+2. Enter a port and a password, then click **Save**.
+   The default port, 27015, is fine unless another program on your PC already uses it.
+   The password can't contain spaces, quotes (`"`) or semicolons (`;`).
+3. Click **Copy Launcher Params**. This copies the TF2 launch options to your clipboard.
+4. In Steam, right-click **Team Fortress 2** and choose **Properties**.
+5. On the **General** tab, paste into **Launch Options**.
+   If you already have launch options, add these after them, separated by a space.
+6. Restart TF2 and join a server.
+7. Click **Check Current Server** in TF2 Player Check.
+
+The copied launch options look like this:
+
+```
+-usercon -g15 +ip 0.0.0.0 +sv_rcon_whitelist_address 127.0.0.1 +hostport 27015 +rcon_password yourpassword +net_start
+```
+
+| Option | What it does |
+|---|---|
+| `-usercon` | Turns on RCON in the TF2 game client. |
+| `-g15` | Turns on the `g15_dumpplayer` command, which TF2 Player Check uses to read the player list. |
+| `+ip 0.0.0.0 +hostport 27015 +net_start` | Starts the RCON listener on the port you chose. |
+| `+rcon_password yourpassword` | Sets the password TF2 Player Check logs in with. |
+| `+sv_rcon_whitelist_address 127.0.0.1` | Stops TF2 from banning TF2 Player Check's address after a failed password attempt. |
+
+If you change the port or password later, click **Copy Launcher Params** again and replace the old launch options in Steam.
+
+> [!WARNING]
+> Because of `+ip 0.0.0.0`, TF2 accepts RCON connections from other computers on your network, so the password is the only protection.
+> Anyone who knows it can run console commands in your game. Use a password you don't use anywhere else,
+> and don't forward the RCON port on your router.
+
+### RCON Troubleshooting
+
+| Message | Fix |
+|---|---|
+| RCON Not Configured | Finish the setup steps above. |
+| TF2 Needs -g15 | TF2 was started without `-g15`. Copy the launch options again from **Settings → RCON Config**, paste them into Steam, then restart TF2. |
+| RCON Connection Failed | Make sure TF2 is running and was started with the launch options. Make sure the port and password in **Settings → RCON Config** match those launch options. |
+| No Players Found | TF2 is connected, but you're not on a server yet. Join a server, then try again. |
 
 ## Usage
 
-First, in Team Fortress 2, open the console and run the `status` command. Highlight the output text and copy it:
+There are two ways to get the list of players on your server into TF2 Player Check. Both open the same Results window.
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/4-console.png)
+* **Option A: Copy and paste `status`.** Works right away, no extra setup.
+* **Option B: One click with RCON.** Needs the one-time [RCON setup](#optional-setup-one-click-server-check-rcon), then no more copying and pasting.
 
-You don't have to be precise, just make sure you copy whatever the `status` command prints out.
+### Option A: Copy and Paste the `status` Command
 
-This is the main window:
+1. In Team Fortress 2, open the console and run the `status` command. Highlight the output text and copy it:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/5-main-window.png)
+   ![](img/4-console.png)
 
-The text field in this window is where you paste the output of the `status` command. Either hit `Ctrl+V` or right-click to paste.
-Right-clicking clears the text field and pastes automatically, to make using the tool a little easier:
+   You don't have to be precise, just make sure you copy whatever the `status` command prints out.
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/6-after-paste.png)
+2. In the TF2 Player Check main window, paste the text into the text field. Either hit `Ctrl+V` or right-click to paste.
 
-Next, click the Check Users button and wait for the Results window to open.
+   ![TF2 Player Check main window, empty, with Check Status Text and Clear greyed out](img/main-window.png)
+
+   Right-clicking clears the text field and pastes automatically, to make using the tool a little easier:
+
+   ![TF2 Player Check main window with pasted TF2 status console output](img/main-window-pasted.png)
+
+3. Click the **Check Status Text** button and wait for the Results window to open.
+   The **Check Status Text** and **Clear** buttons stay greyed out until there is text in the text field.
+
+### Option B: One-Click Check with RCON
+
+1. Finish the [RCON setup](#optional-setup-one-click-server-check-rcon) once.
+2. Start TF2 with the launch options from that setup, and join a server.
+3. In the TF2 Player Check main window, click **Check Current Server**.
+
+TF2 Player Check reads the player list straight from the game and opens the Results window.
+You don't need to open the console or paste anything. If you get an error message, see [RCON Troubleshooting](#rcon-troubleshooting).
+
+### Reading the Results
 
 If any players have a VAC or Steam Game ban associated, the Steam Bans tab will appear with their name and
 some info about the bans. You can double-click a row of player data to open their Steam profile:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/8-steam-bans.png)
+![Steam Bans tab showing players with VAC bans and game bans](img/results-steam-bans.png)
 
 Likewise, if any players have community server bans, the Community Bans tab will be present with the player's name and ban summary.
 You can double-click a row of player data to open their page on SteamHistory.net:
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/7-community-bans.png)
+![Community Bans tab showing active bans, total bans, cheating bans and the latest ban reason from SteamHistory.net](img/results-community-bans.png)
+
+If any players are on the Rent-A-Medic cheater list, the Rent-A-Medic tab will be present. It shows whether they're an active cheater,
+whether they're flagged as a human cheater or a bot, when they were added, and their ban counts.
+You can double-click a row of player data to open their page on Rent-A-Medic:
+
+![Rent-A-Medic tab showing players on the cheater list, flagged as human or bot](img/results-rent-a-medic.png)
 
 Finally, on the All Players tab you'll see a summary of all players on the server, whether they have a ban or not. 
 This screen also shows general information about each player, like ping and time on server, as well as their Backpack.tf inventory value.
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/9-all-players.png)
+![All Players tab listing every player on the server with Steam64 ID, time on server, ping, profile visibility, profile age and Backpack.tf value](img/results-all-players.png)
 
 Right-click on any row in any screen to open a context menu where you can open a player's Steam Profile, SteamHistory.net profile, Backpack.tf inventory,
 and more. You can also copy the player's name, Steam ID and any URLs to sources of information used by this app.
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/10-right-mouse-1.png)
+![Right-click menu on a player with links to their Steam profile, community history, Rent-A-Medic page and Backpack.tf profile](img/context-menu.png)
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/11-right-mouse-2.png)
+![Right-click Copy submenu for copying a player's name, Steam64 ID, Steam32 ID or profile URLs](img/context-menu-copy.png)
 
 ## Advanced Usage: Importing from Files, JSON and More
 
 In addition to copying and pasting the output of `status`, you can also use any text containing Steam IDs. TF2PlayerCheck can parse Steam IDs from just about anything.
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/12-json-text.png)
+![](img/12-json-text.png)
 
 You can also import a file directly into the text input area using the File → Import menu option. 
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/13-file-menu.png)
+![](img/13-file-menu.png)
 
 This is handy if you want to process a large console.log file, or you have a json file full of Steam IDs for instance.
 
-![](https://github.com/fooberticus/TF2PlayerCheck/blob/main/img/14-file-chooser.png)
+![](img/14-file-chooser.png)
 
 The various APIs TF2PlayerCheck uses have request size limits of 100 Steam IDs per request, but have no fear. 
 Lists of Steam IDs larger than that will be processed in multiple smaller batches. So if you have a console.log file that you've been accumulating 
