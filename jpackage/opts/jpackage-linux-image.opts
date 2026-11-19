@@ -1,0 +1,11 @@
+# jpackage
+--type app-image
+--name TF2PlayerCheck
+--vendor Fooberticus
+--input jars
+--main-jar TF2PlayerCheck-1.2.0-jar-with-dependencies.jar
+--app-version 1.2.0
+--main-class com.fooberticus.tf2playercheck.Main
+--resource-dir resources
+--icon resources/TF2PlayerCheck.png
+--verbose

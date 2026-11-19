@@ -39,7 +39,6 @@ public class ResultsWindow extends JFrame {
         resultsTabbedPane = new JTabbedPane();
 
         //======== this ========
-        setVisible(true);
         setTitle("Results"); //NON-NLS
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         var contentPane = getContentPane();

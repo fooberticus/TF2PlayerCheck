@@ -10,7 +10,6 @@ new FormModel {
 			name: "this"
 			"title": "API Key Configuration"
 			"defaultCloseOperation": 2
-			"visible": true
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
 				"text": "Steam API"

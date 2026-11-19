@@ -8,6 +8,7 @@ import com.formdev.flatlaf.intellijthemes.*;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialOceanicIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTNightOwlIJTheme;
+import com.formdev.flatlaf.util.SystemInfo;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -48,6 +49,9 @@ public final class GuiUtil {
     private static final String PROPERTY_STEAM_HISTORY_KEY = "steamHistoryKey";
     private static final String PROPERTY_STEAM_API_KEY = "steamApiKey";
     private static final String PROPERTY_BACKPACKTF_API_KEY = "backpackTfApiKey";
+
+    private static final String PROPERTY_RCON_PORT = "rconPort";
+    private static final String PROPERTY_RCON_PASSWORD = "rconPassword";
 
     static {
         prefs = Preferences.userRoot().node(NAMESPACE);
@@ -102,13 +106,25 @@ public final class GuiUtil {
 
     /** Call this when the app first starts, to set up FlatLaf for the entire application. */
     public static void initGui() {
+        // Use FlatLaf's compact title bar (with the menu bar embedded) instead of the window
+        // manager's. Windows already gets it by default. Must run before any window is created.
+        if (SystemInfo.isLinux) {
+            JFrame.setDefaultLookAndFeelDecorated(true);
+            JDialog.setDefaultLookAndFeelDecorated(true);
+        }
+
         FlatAnimatedLafChange.duration = 300;
         swapTheme(getCurrentTheme());
         UIManager.put("defaultFont", getSavedFont());
         FlatLaf.updateUI();
     }
 
-    /** Call this when creating a new window so the JFrame is created with saved preferences. */
+    /**
+     * Call this when creating a new window so the JFrame is created with saved preferences.
+     * Applies the saved size and position, then shows the window. The frame must not be
+     * visible yet: resizing an already-mapped window races the window manager, which can
+     * snap it back to its packed size and then save that size over the preference.
+     */
     public static void initWindow(JFrame frame, String windowLabel) {
         frame.setIconImages(FlatSVGUtils.createWindowIconImages( "/images/app_icon.svg" ));
 
@@ -135,6 +151,8 @@ public final class GuiUtil {
         } else {
             frame.setLocation(getSavedWindowX(windowLabel), getSavedWindowY(windowLabel));
         }
+
+        frame.setVisible(true);
     }
 
     /** Display a notification using the native System Tray. */
@@ -293,6 +311,24 @@ public final class GuiUtil {
 
     public static void saveBackpackTfApiKey(String key) {
         prefs.put(PROPERTY_BACKPACKTF_API_KEY, key);
+    }
+
+    /* RCON Utilities */
+
+    public static int getSavedRconPort() {
+        return prefs.getInt(PROPERTY_RCON_PORT, RconClient.DEFAULT_PORT);
+    }
+
+    public static void saveRconPort(int port) {
+        prefs.putInt(PROPERTY_RCON_PORT, port);
+    }
+
+    public static String getSavedRconPassword() {
+        return prefs.get(PROPERTY_RCON_PASSWORD, null);
+    }
+
+    public static void saveRconPassword(String password) {
+        prefs.put(PROPERTY_RCON_PASSWORD, password);
     }
 
     /* File Utilities */

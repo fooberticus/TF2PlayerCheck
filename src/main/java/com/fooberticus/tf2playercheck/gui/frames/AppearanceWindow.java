@@ -54,7 +54,6 @@ public class AppearanceWindow extends JFrame {
 
         //======== this ========
         setTitle("Appearance Configuration"); //NON-NLS
-        setVisible(true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         var contentPane = getContentPane();
 

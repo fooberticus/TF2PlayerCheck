@@ -231,6 +231,15 @@ public class BaseResultsPanel extends JPanel {
             this.rentAMedicResultMap = rentAMedicResultMap;
         }
 
+        // Popup trigger fires on press on Linux/macOS, on release on Windows; check both.
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                doPop(e);
+            }
+        }
+
+        @Override
         public void mouseReleased(MouseEvent e) {
             if (e.isPopupTrigger()) {
                 doPop(e);
@@ -242,6 +251,9 @@ public class BaseResultsPanel extends JPanel {
             Point point = e.getPoint();
             int row = jTable.rowAtPoint(point);
             int col = jTable.columnAtPoint(point);
+            if (row < 0) {
+                return;
+            }
             jTable.changeSelection( row, col, !( jTable.isRowSelected( row ) ), false );
 
             Long id = Long.valueOf((String) jTable.getValueAt(row, STEAM64_ID_COL));
